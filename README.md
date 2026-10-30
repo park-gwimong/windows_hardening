@@ -1,30 +1,30 @@
-# HardeningKitty and Windows Hardening
+# HardeningKitty와 Windows 보안 강화
 
-## Introduction
+## 소개
 
-The project started as a simple hardening list for Windows 10. After some time, HardeningKitty was created to simplify the hardening of Windows. Now, HardeningKitty supports guidelines from Microsoft, CIS Benchmarks, DoD STIG and BSI SiSyPHuS Win10. And of course my own hardening list.
+이 프로젝트는 Windows 10을 위한 간단한 보안 강화 목록에서 시작했습니다. 이후 Windows 보안 강화를 간편하게 수행할 수 있도록 HardeningKitty를 개발했습니다. 현재 HardeningKitty는 Microsoft, CIS Benchmarks, DoD STIG, BSI SiSyPHuS Win10의 지침과 원저자가 직접 작성한 보안 강화 목록을 지원합니다.
 
-This is a hardening checklist that can be used in private and business environments for hardening Windows 10. The checklist can be used for all Windows versions, but in Windows 10 Home the Group Policy Editor is not integrated and the adjustment must be done directly in the registry. For this, there is the _HailMary_ mode from _HardeningKitty_.
+이 보안 강화 체크리스트는 개인 및 기업 환경에서 Windows 10의 보안을 강화하는 데 사용할 수 있습니다. 모든 Windows 버전에서 사용할 수 있지만, Windows 10 Home에는 그룹 정책 편집기가 포함되어 있지 않아 레지스트리를 직접 수정해야 합니다. 이를 위해 _HardeningKitty_는 _HailMary_ 모드를 제공합니다.
 
-The settings should be seen as security and privacy recommendation and should be carefully checked whether they will affect the operation of your infrastructure or impact the usability of key functions. It is important to weigh security against usability.
+각 설정은 보안 및 개인정보 보호를 위한 권장 사항입니다. 인프라 운영이나 주요 기능의 사용성에 영향을 주는지 신중하게 확인해야 합니다. 보안과 사용성 사이의 균형을 고려하는 것이 중요합니다.
 
-The project started with the creation of a simple hardening checklist for Windows 10. The focus has shifted to the audit of various well-known frameworks / benchmarks with the development of _HardeningKitty_. Meanwhile, various CIS benchmarks and Microsoft Security Baselines are supported. With the development of the _HailMary_ mode, it will also be possible to apply settings of any hardening checklist on a Windows system.
+처음에는 Windows 10용 간단한 보안 강화 체크리스트를 작성하는 프로젝트였지만, _HardeningKitty_ 개발과 함께 널리 알려진 다양한 프레임워크와 벤치마크를 기준으로 점검하는 데 초점을 맞추게 되었습니다. 현재 여러 CIS 벤치마크와 Microsoft 보안 기준을 지원합니다. _HailMary_ 모드를 통해 보안 강화 체크리스트의 설정을 Windows 시스템에 적용할 수도 있습니다.
 
 ## HardeningKitty
 
-_HardeningKitty_ originates from the [Windows Hardening Project by Michael Schneider](https://github.com/0x6d69636b/windows_hardening). This fork retains the original **0.9.5** upstream Git module and adds a local, read-only **comprehensive security audit with explained HTML reporting**.
+_HardeningKitty_는 [Michael Schneider의 Windows 보안 강화 프로젝트](https://github.com/0x6d69636b/windows_hardening)에서 시작되었습니다. 이 포크는 업스트림 Git의 원본 **0.9.5** 모듈을 유지하면서, 로컬에서 읽기 전용으로 실행하는 **설명 포함 HTML 보고서 기반 통합 보안 점검**을 추가합니다.
 
-원본 `HardeningKitty.psm1`과 공식 점검 목록은 유지하고, `HardeningKitty.SecurityAudit.psm1`, 내부 수집 지원 파일 `HardeningKitty.BaselineAudit.ps1`, 중요도·조치 분류 파일 `HardeningKitty.PriorityAudit.ps1`, 보고서 표시 파일 `HardeningKitty.Report.ps1`, 항목 설명 `report-data/`를 추가했습니다. 기본 머신 **418개**와 현재 사용자 **56개** 기준 항목에 화면 보호기·비밀번호·계정 날짜 점검을 합칩니다. 이 Git 체크아웃의 원본 `HardeningKitty.psm1`은 **서명되지 않은 0.9.5 개발 코드**이며 추가 코드·설명 카탈로그·수정된 manifest도 서명된 릴리스가 아닙니다. `lists/`의 서명된 목록 manifest는 목록 무결성용이며 엔진이나 확장 코드의 서명을 뜻하지 않습니다. 공개 통합 명령은 `Invoke-HardeningKittySecurityAudit`이며 `HardeningKitty.psd1`을 가져와 사용합니다.
+원본 `HardeningKitty.psm1`과 공식 점검 목록은 유지하고, `HardeningKitty.SecurityAudit.psm1`, 내부 수집 지원 파일 `HardeningKitty.BaselineAudit.ps1`, 중요도·조치 분류 파일 `HardeningKitty.PriorityAudit.ps1`, 보고서 표시 파일 `HardeningKitty.Report.ps1`, 항목 설명 `report-data/`를 추가했습니다. 기본 머신 **418개**와 현재 사용자 **56개** 기준 항목에 화면 보호기·비밀번호·계정 날짜 점검을 합칩니다. 이 Git 체크아웃의 원본 `HardeningKitty.psm1`은 **서명되지 않은 0.9.5 개발 코드**이며 추가 코드·설명 카탈로그·수정된 매니페스트도 서명된 릴리스가 아닙니다. `lists/`의 서명된 목록 매니페스트는 목록 무결성용이며 엔진이나 확장 코드의 서명을 뜻하지 않습니다. 공개 통합 명령은 `Invoke-HardeningKittySecurityAudit`이며 `HardeningKitty.psd1`을 가져와 사용합니다.
 
-_HardeningKitty_ supports hardening of a Windows system. The configuration of the system is retrieved and assessed using a finding list. In addition, the system can be hardened according to predefined values. _HardeningKitty_ reads settings from the registry and uses other modules to read configurations outside the registry.
+_HardeningKitty_는 Windows 시스템의 보안 강화를 지원합니다. 점검 목록을 사용하여 시스템 설정을 조회하고 평가하며, 미리 정의된 값에 따라 시스템의 보안을 강화할 수도 있습니다. _HardeningKitty_는 레지스트리에서 설정을 읽고, 레지스트리 외부의 설정은 다른 모듈을 사용하여 조회합니다.
 
-The script was developed for English systems. It is possible that in other languages the analysis is incorrect. Please create an issue if this occurs.
+이 스크립트는 영어 시스템을 기준으로 개발되었습니다. 다른 언어 환경에서는 분석 결과가 정확하지 않을 수 있습니다. 이러한 문제가 발생하면 이슈를 등록해 주세요.
 
-### Signed Version
+### 서명된 버전
 
-The development of _HardeningKitty_ happens in this repository. In the [repository of scip AG](https://github.com/scipag/HardeningKitty) is a stable version of _HardeningKitty_ that has been *signed* with the code signing certificate of _scip AG_. This means that _HardeningKitty_ can also be run on systems that only allow signed scripts.
+_HardeningKitty_의 개발은 이 저장소에서 이루어집니다. [scip AG 저장소](https://github.com/scipag/HardeningKitty)에서는 _scip AG_의 코드 서명 인증서로 *서명된* 안정 버전의 _HardeningKitty_를 별도로 제공합니다. 이 서명된 버전은 서명된 스크립트만 허용하는 시스템에서도 실행할 수 있습니다.
 
-### How To Run
+### 실행 방법
 
 #### HTML 보고서 빠른 시작
 
@@ -54,15 +54,15 @@ Start-Process -FilePath $ReportPath
 Invoke-HardeningKitty -Mode Audit -Log -Report
 ```
 
-설정 변경을 원하지 않으면 `HailMary` / `GPO` 모드를 실행하지 마세요. 통합 명령은 변경 모드를 노출하지 않습니다. 상세 옵션은 [통합 보안 점검 사용법](#comprehensive-security-audit)을 참고하세요.
+설정 변경을 원하지 않으면 `HailMary` / `GPO` 모드를 실행하지 마세요. 통합 명령은 변경 모드를 노출하지 않습니다. 상세 옵션은 [통합 보안 점검 사용법](#통합-보안-점검)을 참고하세요.
 
-#### Native engine example
+#### 원본 엔진 실행 예시
 
-The sample output below is historical; this checkout uses native 0.9.5. Import `HardeningKitty.psd1` for both public commands; importing only `HardeningKitty.psm1` exposes only the native engine.
+아래 출력은 과거 버전의 예시이며, 이 체크아웃은 원본 엔진 0.9.5를 사용합니다. 두 공개 명령을 모두 사용하려면 `HardeningKitty.psd1`을 가져오세요. `HardeningKitty.psm1`만 가져오면 원본 엔진만 사용할 수 있습니다.
 
-Run the script with administrative privileges to access machine settings. For the user settings it is better to execute them with a normal user account. Ideally, the user account is used for daily work.
+머신 설정에 접근하려면 관리자 권한으로 스크립트를 실행하세요. 사용자 설정은 일반 사용자 계정으로 실행하는 것이 좋으며, 가능하면 일상 업무에 사용하는 계정으로 점검하세요.
 
-Download _HardeningKitty_ and copy it to the target system (script and lists). Then HardeningKitty can be imported and executed:
+_HardeningKitty_를 다운로드하여 대상 시스템에 스크립트와 목록을 복사하세요. 그런 다음 HardeningKitty를 가져와 실행할 수 있습니다.
 
 ```text
 PS C:\tmp> Import-Module .\HardeningKitty.psm1
@@ -110,11 +110,11 @@ PS C:\tmp> Invoke-HardeningKitty -EmojiSupport
 [*] 9/4/2022 8:54:25 AM - Your HardeningKitty score is: 4.82. HardeningKitty Statistics: Total checks: 325 - Passed: 213, Low: 33, Medium: 76, High: 3.
 ```
 
-### How To Install
+### 설치 방법
 
-First create the directory *HardeningKitty* and for every version a sub directory like *0.9.5* in a path listed in the *PSModulePath* environment variable.
+먼저 *PSModulePath* 환경 변수에 나열된 경로에 *HardeningKitty* 디렉터리를 만들고, 그 아래에 *0.9.5*와 같은 버전별 하위 디렉터리를 만드세요.
 
-Copy *HardeningKitty.psm1*, *HardeningKitty.SecurityAudit.psm1*, *HardeningKitty.BaselineAudit.ps1*, *HardeningKitty.PriorityAudit.ps1*, *HardeningKitty.Report.ps1*, *HardeningKitty.psd1*, and both the *lists* and *report-data* directories to this new directory.
+새 디렉터리에 *HardeningKitty.psm1*, *HardeningKitty.SecurityAudit.psm1*, *HardeningKitty.BaselineAudit.ps1*, *HardeningKitty.PriorityAudit.ps1*, *HardeningKitty.Report.ps1*, *HardeningKitty.psd1* 파일과 *lists*, *report-data* 디렉터리를 모두 복사하세요.
 
 ```powershell
 PS C:\tmp> $Version = "0.9.5"
@@ -122,13 +122,13 @@ PS C:\tmp> New-Item -Path $Env:ProgramFiles\WindowsPowerShell\Modules\HardeningK
 PS C:\tmp> Copy-Item -Path .\HardeningKitty.psd1,.\HardeningKitty.psm1,.\HardeningKitty.SecurityAudit.psm1,.\HardeningKitty.BaselineAudit.ps1,.\HardeningKitty.PriorityAudit.ps1,.\HardeningKitty.Report.ps1,.\lists\,.\report-data\ -Destination $Env:ProgramFiles\WindowsPowerShell\Modules\HardeningKitty\$Version\ -Recurse
 ```
 
-For more information see Microsoft's article [Installing a PowerShell Module](https://docs.microsoft.com/en-us/powershell/scripting/developer/module/installing-a-powershell-module).
+자세한 내용은 Microsoft의 [PowerShell 모듈 설치](https://docs.microsoft.com/en-us/powershell/scripting/developer/module/installing-a-powershell-module) 문서를 참고하세요.
 
-### How to Automatically Download and Install the Latest Release
+### 최신 릴리스 자동 다운로드 및 설치
 
-You can use the script below to download and install the latest release of *HardeningKitty*.
+아래 스크립트로 *HardeningKitty*의 최신 릴리스를 다운로드하고 설치할 수 있습니다.
 
-This downloads the upstream release, not this fork's comprehensive audit extensions. To retain the audit and item explanations, install this checkout's manifest, both modules, all three support scripts, `lists/` and `report-data/` together as described above. The signed stable release linked above is separate from this unsigned Git checkout; review and follow your organization's script-signing policy rather than treating the list signature as code-signing approval.
+이 스크립트는 업스트림 릴리스를 다운로드하며, 이 포크의 통합 보안 점검 확장은 포함하지 않습니다. 통합 점검과 항목 설명을 유지하려면 위에서 설명한 대로 이 체크아웃의 매니페스트, 두 모듈, 지원 스크립트 세 개, `lists/`, `report-data/`를 함께 설치하세요. 위에 링크한 서명된 안정 릴리스는 이 서명되지 않은 Git 체크아웃과 별개입니다. 목록 서명을 코드 서명 승인으로 간주하지 말고 조직의 스크립트 서명 정책을 확인하고 따르세요.
 
 ```powershell
 Function InstallHardeningKitty() {
@@ -148,33 +148,33 @@ Function InstallHardeningKitty() {
 InstallHardeningKitty
 ```
 
-### Examples
+### 사용 예시
 
-#### Audit
+#### 보안 점검
 
-The default mode is _audit_. With `-Report` and `-Log`, HardeningKitty saves the results to a CSV file and creates a log file. The files are automatically named and receive a timestamp. Using the parameters _ReportFile_ or _LogFile_, it is also possible to assign your own name and path.
+기본 모드는 _audit_입니다. `-Report`와 `-Log`를 지정하면 HardeningKitty가 결과를 CSV 파일로 저장하고 로그 파일을 생성합니다. 파일명은 타임스탬프를 포함하여 자동으로 지정됩니다. _ReportFile_ 또는 _LogFile_ 매개변수로 파일명과 경로를 직접 지정할 수도 있습니다.
 
-The _Filter_ parameter can be used to filter the hardening list. For this purpose the PowerShell ScriptBlock syntax must be used, for example `{ $_.ID -eq 4505 }`. The following elements are useful for filtering: ID, Category, Name, Method, and Severity.
+_Filter_ 매개변수로 보안 강화 목록을 필터링할 수 있습니다. 이때 `{ $_.ID -eq 4505 }`와 같은 PowerShell ScriptBlock 문법을 사용해야 합니다. 필터링에는 ID, Category, Name, Method, Severity 필드가 유용합니다.
 
 ```powershell
 Invoke-HardeningKitty -Mode Audit -Log -Report
 ```
 
-HardeningKitty can be executed with a specific list defined by the parameter _FileFindingList_. If HardeningKitty is run several times on the same system, it may be useful to hide the machine information. The parameter _SkipMachineInformation_ is used for this purpose.
+_FileFindingList_ 매개변수로 특정 목록을 지정하여 HardeningKitty를 실행할 수 있습니다. 같은 시스템에서 여러 번 실행할 때는 머신 정보를 숨기는 것이 유용할 수 있습니다. 이때 _SkipMachineInformation_ 매개변수를 사용합니다.
 
 ```powershell
 Invoke-HardeningKitty -FileFindingList .\lists\finding_list_0x6d69636b_user.csv -SkipMachineInformation
 ```
 
-HardeningKitty uses the default list, and checks only tests with the severity Medium.
+다음 예시는 기본 목록에서 심각도가 Medium인 항목만 점검합니다.
 
 ```powershell
 Invoke-HardeningKitty -Filter { $_.Severity -eq "Medium" }
 ```
 
-#### Comprehensive security audit
+#### 통합 보안 점검
 
-`Invoke-HardeningKittySecurityAudit`은 머신과 현재 사용자 기준 목록 전체 및 보완 항목을 읽기 전용으로 점검합니다. 원본 모듈만 직접 가져오면 이 명령이 없으므로 **manifest인 `HardeningKitty.psd1`을 가져와야 합니다**.
+`Invoke-HardeningKittySecurityAudit`은 머신과 현재 사용자 기준 목록 전체 및 보완 항목을 읽기 전용으로 점검합니다. 원본 모듈만 직접 가져오면 이 명령이 없으므로 **매니페스트인 `HardeningKitty.psd1`을 가져와야 합니다**.
 
 ##### 점검 항목
 
@@ -338,7 +338,7 @@ HTML의 중요도·전체 우선순위 집계는 **모든 결과 행** 기준입
 
 | 증상 | 확인할 사항 |
 | :--- | :--- |
-| `Invoke-HardeningKittySecurityAudit`을 찾지 못함 | 설치 항목의 파일·디렉터리를 모두 함께 두고 새 PowerShell에서 manifest 가져오기 |
+| `Invoke-HardeningKittySecurityAudit`을 찾지 못함 | 설치 항목의 파일·디렉터리를 모두 함께 두고 새 PowerShell에서 매니페스트 가져오기 |
 | 설명 카탈로그를 읽지 못함 | `report-data/`의 JSON 파일들이 모듈과 함께 배포되었는지 확인 |
 | `Get-LocalUser` 사용 불가 | 64비트 Windows에서 64비트 PowerShell인지 확인 |
 | `secedit` 접근 거부 / 내보내기 실패 | 점검할 사용자와 동일한 계정으로 관리자 권한 실행 |
@@ -357,127 +357,127 @@ if ($TestResults.FailedCount -gt 0) { throw 'Security audit regression tests fai
 
 테스트는 전체 기준 목록과 설명의 대응, 결과 누락·중복·기본값 대체 처리, 읽기 전용 엔진 호출, 정책·날짜 경계값, 클라우드·비활성 계정 구분, 임시 파일 정리, HTML 설명·집계·인젝션 방지·UTF-8 출력, CSV 출력과 기존 보고서 보호를 검증합니다.
 
-#### Config
+#### 설정 조회
 
-The mode _config_ retrives all current settings of a system. If a setting has not been configured, HardeningKitty will use a default value stored in the finding list. This mode can be combined with other functions, for example to create a backup.
+_config_ 모드는 시스템의 현재 설정을 모두 조회합니다. 구성되지 않은 설정에는 점검 목록에 저장된 기본값을 사용합니다. 이 모드는 백업 생성과 같은 다른 기능과 함께 사용할 수 있습니다.
 
-HardeningKitty gets the current settings and stores them in a report:
+다음 예시는 현재 설정을 조회하여 보고서에 저장합니다.
 
 ```powershell
 Invoke-HardeningKitty -Mode Config -Report -ReportFile C:\tmp\my_hardeningkitty_report.csv
 ```
 
-#### Backup
+#### 백업
 
-Backups are important. Really important. Therefore, HardeningKitty also has a function to retrieve the current configuration and save it in a form that can be partially restored.
+백업은 매우 중요합니다. 따라서 HardeningKitty는 현재 설정을 조회하여 일부 복원이 가능한 형태로 저장하는 기능도 제공합니다.
 
-**Disclaimer:** HardeningKitty tries to restore the original configuration. This works quite well with registry keys and Hardening Kitty really tries its best. But the backup function is not a snapshot and does not replace a real system backup. It is not possible to restore the system 1:1 with HardeningKitty alone after HailMary. If this is a requirement, create an image or system backup and restore it.
+**주의 사항:** HardeningKitty는 원래 설정을 복원하려고 시도합니다. 레지스트리 키는 비교적 잘 복원되며 가능한 범위에서 최선을 다하지만, 이 백업 기능은 스냅샷이 아니며 실제 시스템 백업을 대체하지 않습니다. HailMary 실행 후 HardeningKitty만으로 시스템을 이전 상태와 1:1로 복원할 수는 없습니다. 완전한 복원이 필요하다면 이미지 또는 시스템 백업을 생성하고 해당 백업으로 복원하세요.
 
-The _Backup_ switch specifies that the file is written in form of a finding list and can thus be used for the _HailMary_ mode. The name and path of the backup can be specified with the parameter _BackupFile_.
+_Backup_ 스위치를 지정하면 파일을 점검 목록 형식으로 저장하므로 _HailMary_ 모드에서 사용할 수 있습니다. 백업 파일명과 경로는 _BackupFile_ 매개변수로 지정합니다.
 
 ```powershell
 Invoke-HardeningKitty -Mode Config -Backup
 ```
 
-Please test this function to see if it really works properly on the target system before making any serious changes. A Schrödinger's backup is dangerous.
+중요한 설정을 변경하기 전에 대상 시스템에서 이 기능이 제대로 작동하는지 반드시 시험하세요. 복원 가능 여부를 확인하지 않은 ‘슈뢰딩거의 백업’은 위험합니다.
 
-##### Non-Default Finding List
+##### 기본 목록이 아닌 점검 목록
 
-Note that if _-FileFindingList_ is not specified, the backup is referred to the default finding list. Before deploying a _specific_ list in _HailMary_ mode, always create a backup _referred to that specific list_.
+_-FileFindingList_를 지정하지 않으면 기본 점검 목록을 기준으로 백업한다는 점에 유의하세요. _HailMary_ 모드에서 _특정_ 목록을 적용하기 전에는 반드시 _그 목록을 기준으로_ 백업을 생성하세요.
 
 ```powershell
 Invoke-HardeningKitty -Mode Config -Backup -BackupFile ".\myBackup.csv" -FileFindingList ".\list\{list}.csv"
 ```
 
-##### Restoring a Backup
+##### 백업 복원
 
-The _Backup_ switch creates a file in form of a finding list, to restore the backup load it in _HailMary_ mode like any find list:
+_Backup_ 스위치는 점검 목록 형식의 파일을 생성합니다. 백업을 복원하려면 다른 점검 목록과 마찬가지로 _HailMary_ 모드에서 해당 파일을 불러오세요.
 
 ```powershell
 Invoke-HardeningKitty -Mode HailMary -Log -Report -FileFindingList ".\myBackup.csv"
 ```
 
-#### HailMary
+#### HailMary 설정 적용
 
-The _HailMary_ method is very powerful. It can be used to deploy a finding list on a system. All findings are set on this system as recommended in the list. With power comes responsibility. Please use this mode only if you know what you are doing. Be sure to have a backup of the system.
+_HailMary_는 매우 강력한 기능입니다. 점검 목록을 시스템에 적용하여 모든 항목을 목록의 권장값으로 설정합니다. 강력한 기능에는 책임이 따릅니다. 수행할 작업을 충분히 이해한 경우에만 이 모드를 사용하고, 반드시 시스템을 백업해 두세요.
 
-For now, the filter function is only supported in Audit and Config mode. As the HailMary mode is a delicate matter, create your own file and remove all the lines you want to filter.
+현재 필터 기능은 Audit 및 Config 모드에서만 지원합니다. HailMary 모드는 신중하게 다뤄야 하므로, 직접 사용할 별도 파일을 만들고 적용에서 제외할 행을 모두 제거하세요.
 
 ```powershell
 Invoke-HardeningKitty -Mode HailMary -Log -Report -FileFindingList .\lists\finding_list_0x6d69636b_machine.csv
 ```
 
-Before HailMary is run, a finding list must be picked. It is important to check whether the settings have an influence on the stability and functionality of the system. Before running HailMary, a backup should be made.
+HailMary를 실행하기 전에 사용할 점검 목록을 선택해야 합니다. 각 설정이 시스템의 안정성과 기능에 영향을 주는지 확인하는 것이 중요합니다. HailMary 실행 전에는 백업을 생성하세요.
 
-#### Create a Group Policy (experimental)
+#### 그룹 정책 생성 (실험적 기능)
 
-Thanks to [@gderybel](https://github.com/gderybel), HardeningKitty can convert a finding list into a group policy. As a basic requirement, the Group Policy Management PowerShell module must be installed. At the moment only registry settings can be converted and not everything has been tested yet. A new policy is created, as long as it is not assigned to an object, no change is made to the system. Use it with care.
+[@gderybel](https://github.com/gderybel)의 기여로 HardeningKitty에서 점검 목록을 그룹 정책으로 변환할 수 있습니다. 먼저 그룹 정책 관리용 PowerShell 모듈을 설치해야 합니다. 현재는 레지스트리 설정만 변환할 수 있으며, 모든 항목이 검증된 것은 아닙니다. 새 정책을 생성하지만, 해당 정책을 개체에 할당하기 전까지는 시스템에 변경 사항이 적용되지 않습니다. 신중하게 사용하세요.
 
 ```powershell
 Invoke-HardeningKitty -Mode GPO -FileFindingList .\lists\finding_list_0x6d69636b_machine.csv -GPOName HardeningKitty-Machine-01
 ```
 
-### Finding List Integrity
+### 점검 목록 무결성
 
-In the write modes (_HailMary_ and _GPO_) the finding list fully controls what is applied to the system. To ensure that a list has not been tampered with en route to the operator (e.g. poisoned repository, shared baseline, downloaded or emailed 'run this list'), HardeningKitty can verify that a list is the authentic and unaltered from that published by the maintainer.
+쓰기 모드(_HailMary_, _GPO_)에서는 점검 목록이 시스템에 적용할 내용을 전적으로 결정합니다. 변조된 저장소, 공유된 보안 기준, 다운로드하거나 이메일로 받은 ‘이 목록을 실행하세요’라는 파일 등 사용자에게 전달되는 과정에서 목록이 변조되지 않았는지 확인하기 위해, HardeningKitty는 해당 목록이 유지관리자가 배포한 원본과 일치하는지 검증할 수 있습니다.
 
-The official lists are attested by a signed manifest shipped in the `lists\` directory:
+공식 목록은 `lists\` 디렉터리에 함께 배포되는 서명된 매니페스트로 확인합니다.
 
-* `lists\hardeningkitty_lists_manifest.psd1` - a readable file mapping each official list to its SHA-256 hash
-* `lists\hardeningkitty_lists_manifest.psd1.p7s` - a detached signature over that manifest, created with the maintainer certificate
+* `lists\hardeningkitty_lists_manifest.psd1` - 각 공식 목록과 SHA-256 해시의 대응 관계를 담은, 사람이 읽을 수 있는 파일
+* `lists\hardeningkitty_lists_manifest.psd1.p7s` - 유지관리자의 인증서로 생성한 해당 매니페스트의 분리 서명
 
-At runtime, HardeningKitty verifies the detached signature and checks that the signer's certificate matches the thumbprint pinned in the module (`$HardeningKittyListSigningThumbprint`). It also compares the hash of the loaded list against the manifest. A list whose hash is in the signed manifest is **official / verified**. Any other list is **custom / unverified**. This is provenance, not an allow-list - custom lists are fully supported.
+실행 시 HardeningKitty는 분리 서명을 검증하고, 서명자의 인증서가 모듈에 고정된 지문(`$HardeningKittyListSigningThumbprint`)과 일치하는지 확인합니다. 불러온 목록의 해시도 매니페스트와 비교합니다. 서명된 매니페스트에 해시가 있는 목록은 **공식 / 검증됨**으로, 그 외의 목록은 **사용자 정의 / 미검증**으로 구분합니다. 이는 출처 확인이지 허용 목록이 아니며, 사용자 정의 목록도 완전히 지원합니다.
 
-Behaviour by mode:
+모드별 동작은 다음과 같습니다.
 
-* **Audit / Config** (read-only): the verification result is shown as information only. Custom lists run without restriction
-* **HailMary / GPO** (write): a verified official list runs normally. A custom or modified list will be **refused** unless the risk is explicitly accepted with the `-AllowCustomList` switch
+* **Audit / Config** (읽기 전용): 검증 결과는 참고 정보로만 표시합니다. 사용자 정의 목록도 제한 없이 실행됩니다.
+* **HailMary / GPO** (쓰기): 검증된 공식 목록은 정상적으로 실행됩니다. 사용자 정의 목록이나 수정된 목록은 `-AllowCustomList` 스위치로 위험을 명시적으로 수락하지 않으면 실행이 **거부됩니다**.
 
 ```powershell
 # Apply your own (unverified) list in HailMary - accept the risk
 Invoke-HardeningKitty -Mode HailMary -FileFindingList .\my_custom_list.csv -AllowCustomList
 ```
 
-Note that verification only confirms that a list has not been altered by the publisher. It cannot guarantee that the settings in a list are safe. It also does not protect against a malicious administrator - someone with administrator privileges can change the system directly. However, it does protect the honest operator against running a tampered or incorrect list.
+이 검증은 목록이 배포된 원본에서 변경되지 않았는지만 확인합니다. 목록에 포함된 설정의 안전성을 보장하지는 않습니다. 또한 관리자 권한이 있는 사람은 시스템을 직접 변경할 수 있으므로 악의적인 관리자로부터 보호하는 기능도 아닙니다. 다만 정상적으로 작업하는 사용자가 변조되었거나 잘못된 목록을 실행하지 않도록 보호합니다.
 
-#### Running Your Own Lists
+#### 사용자 정의 목록 실행
 
-Building and running your own custom lists is fully supported. An unsigned custom list simply runs in Audit/Config and requires the `-AllowCustomList` switch in write mode. To get the same 'verified' experience for your own lists, sign your list content with your code-signing certificate and pin your thumbprint locally. HardeningKitty's trust anchor is a single thumbprint.
+사용자 정의 목록의 작성과 실행을 완전히 지원합니다. 서명되지 않은 사용자 정의 목록은 Audit/Config에서 그대로 실행되며, 쓰기 모드에서는 `-AllowCustomList` 스위치가 필요합니다. 사용자 정의 목록도 동일하게 ‘검증됨’으로 확인하려면 자신의 코드 서명 인증서로 목록 내용을 서명하고, 로컬에서 해당 인증서의 지문을 고정하세요. HardeningKitty의 신뢰 기준점은 단일 인증서 지문입니다.
 
-#### Why RSA and not ECC?
+#### ECC 대신 RSA를 사용하는 이유
 
-The manifest is signed and verified as a PKCS#7/CMS structure (`System.Security.Cryptography.Pkcs.SignedCms`). On Windows PowerShell 5.1 (.NET Framework 4.x, still the default on Windows) CMS signing/verification with ECDSA keys is unreliable, whereas RSA works across both Windows PowerShell 5.1 and PowerShell 7. Since HardeningKitty must run on both, RSA-4096 is the interoperable choice.
+매니페스트는 PKCS#7/CMS 구조(`System.Security.Cryptography.Pkcs.SignedCms`)로 서명하고 검증합니다. Windows에서 여전히 기본인 Windows PowerShell 5.1(.NET Framework 4.x)에서는 ECDSA 키를 사용한 CMS 서명 및 검증이 안정적이지 않은 반면, RSA는 Windows PowerShell 5.1과 PowerShell 7 모두에서 동작합니다. HardeningKitty는 두 환경 모두에서 실행되어야 하므로, 상호 운용성을 위해 RSA-4096을 사용합니다.
 
-### HardeningKitty Score
+### HardeningKitty 점수
 
-Each Passed finding gives 4 points, a Low finding gives 2 points, a Medium finding gives 1 point and a High Finding gives 0 points.
+항목별로 Passed는 4점, Low는 2점, Medium은 1점, High는 0점을 부여합니다.
 
-The formula for the HardeningKitty Score is _(Points achieved / Maximum points) * 5 + 1_.
+HardeningKitty 점수 공식은 _(획득 점수 / 최대 점수) * 5 + 1_입니다.
 
-#### Rating
+#### 평가 등급
 
-| Score | Rating Casual | Rating Professional |
+| 점수 | 친근한 평가 | 전문적 평가 |
 | :---- | :------------ | :------------------ |
-| 6 | 😹 Excellent | Excellent |
-| 5 | 😺 Well done | Good |
-| 4 | 😼 Sufficient | Sufficient |
-| 3 | 😿 You should do better | Insufficient |
-| 2 | 🙀 Weak | Insufficient |
-| 1 | 😾 Bogus | Insufficient |
+| 6 | 😹 훌륭해요 | 우수 |
+| 5 | 😺 잘했어요 | 양호 |
+| 4 | 😼 충분해요 | 충분 |
+| 3 | 😿 더 개선해야 해요 | 미흡 |
+| 2 | 🙀 취약해요 | 미흡 |
+| 1 | 😾 엉망이에요 | 미흡 |
 
-### HardeningKitty Interface
+### HardeningKitty 웹 인터페이스
 
-[@ataumo](https://github.com/ataumo) build a web based interface for HardeningKitty. The tool can be used to create your own lists and provides additional information on the hardening settings. The [source code](https://github.com/ataumo/policies_hardening_interface) is under AGPL license and there is a [demo site](https://phi.cryptonit.fr/policies_hardening_interface/).
+[@ataumo](https://github.com/ataumo)가 HardeningKitty용 웹 인터페이스를 만들었습니다. 이 도구로 사용자 정의 목록을 작성할 수 있으며, 보안 강화 설정에 관한 추가 정보도 확인할 수 있습니다. [소스 코드](https://github.com/ataumo/policies_hardening_interface)는 AGPL 라이선스로 제공되며, [데모 사이트](https://phi.cryptonit.fr/policies_hardening_interface/)도 있습니다.
 
-### KittyPorter - Make Hardening Kitty Reports Great Again
+### KittyPorter - HardeningKitty 보고서를 더욱 유용하게
 
-[Yair](https://github.com/Y8765) took care of presenting HardeningKitty results for sysadmins and even management in the form of a beautiful Excel spreadsheet containing Security Assessment Dashboards and a Dashboard with Dynamic Updates based on the status of findings, as well as an HTML Report Overview. He publishes his work in the [KittyPorter](https://github.com/Y8765/KittyPorter) repo.
+[Yair](https://github.com/Y8765)는 시스템 관리자와 경영진이 HardeningKitty 결과를 쉽게 볼 수 있도록 보기 좋은 Excel 스프레드시트로 구성했습니다. 보안 평가 대시보드, 점검 항목의 상태에 따라 동적으로 갱신되는 대시보드, HTML 보고서 개요를 제공합니다. 결과물은 [KittyPorter](https://github.com/Y8765/KittyPorter) 저장소에 공개되어 있습니다.
 
-### Last Update
+### 최신 지원 기준
 
-HardeningKitty can be used to audit systems against the following baselines / benchmarks:
+HardeningKitty는 다음 보안 기준 및 벤치마크에 따라 시스템을 점검할 수 있습니다.
 
-| Name | System Version    | Version  |
+| 이름 | 시스템 버전    | 기준 버전  |
 | :--- | :---------------- | :------  |
 | 0x6d69636b Windows 11 (Machine) | 25H2 | |
 | 0x6d69636b Windows 11 (User) | 25H2 | |
@@ -615,7 +615,7 @@ HardeningKitty can be used to audit systems against the following baselines / be
 | Microsoft Windows Server TLS Settings | 1809 | 1.0 |
 | Microsoft Windows Server TLS Settings (Future Use with TLSv1.3) | 1903 | 1.0 |
 
-## Sources
+## 참고 자료
 
 * [CIS Benchmarks](https://www.cisecurity.org/cis-benchmarks/)
 * [Security baseline (FINAL): Windows 10 and Windows Server, version 2004](https://techcommunity.microsoft.com/t5/microsoft-security-baselines/security-baseline-final-windows-10-and-windows-server-version/ba-p/1543631)
