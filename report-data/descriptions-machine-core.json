@@ -1,0 +1,842 @@
+[
+  {
+    "Scope": "Machine",
+    "ID": "1000",
+    "Name": "SMBv1 Support",
+    "Description": "오래된 파일·프린터 공유 프로토콜인 SMBv1 구성 요소가 사용 가능한 상태인지 확인합니다. 더 최신 SMB 버전의 보호 기능을 갖추지 못한 구형 통신 경로와 관련 공격 노출을 줄이는 데 중요한 항목입니다."
+  },
+  {
+    "Scope": "Machine",
+    "ID": "1103",
+    "Name": "Store passwords using reversible encryption",
+    "Description": "사용자 암호를 원문으로 복원할 수 있는 가역 암호화 형태로 저장하도록 허용하는지 확인합니다. 이런 저장 방식은 암호 데이터가 탈취될 때 원래 암호가 노출될 위험을 높이므로 일반적인 암호 해시 저장과 구분해야 합니다."
+  },
+  {
+    "Scope": "Machine",
+    "ID": "1101",
+    "Name": "Account lockout duration",
+    "Description": "로그온 실패가 누적되어 잠긴 계정이 자동으로 해제되기까지의 시간을 확인합니다. 잠금 유지 시간은 반복적인 암호 추측을 늦추는 효과와 정상 사용자의 업무 중단 사이의 균형에 영향을 줍니다."
+  },
+  {
+    "Scope": "Machine",
+    "ID": "1100",
+    "Name": "Account lockout threshold",
+    "Description": "계정을 잠그기 전까지 허용하는 로그온 실패 횟수를 확인합니다. 반복적인 암호 추측을 제한하는 기준이지만, 지나치게 낮은 임계값은 다른 사람이 고의로 계정을 잠그는 서비스 거부에도 악용될 수 있습니다."
+  },
+  {
+    "Scope": "Machine",
+    "ID": "1104",
+    "Name": "Allow Administrator account lockout",
+    "Description": "기본 제공 Administrator 계정에도 계정 잠금 정책을 적용할 수 있는지 확인합니다. 권한이 높은 계정에 대한 반복 암호 추측을 제한하는 데 관련되며, 잠금 발생 시 사용할 관리·복구 경로도 고려해야 합니다."
+  },
+  {
+    "Scope": "Machine",
+    "ID": "1102",
+    "Name": "Reset account lockout counter",
+    "Description": "로그온 실패 횟수가 초기화되기까지 필요한 대기 시간을 확인합니다. 이 시간이 너무 짧으면 공격자가 실패 간격을 조절해 잠금 임계값에 도달하지 않고 암호 추측을 이어갈 수 있습니다."
+  },
+  {
+    "Scope": "Machine",
+    "ID": "1200",
+    "Name": "Access this computer from the network",
+    "Description": "파일 공유 등 네트워크 로그온을 통해 이 컴퓨터의 자원에 접근할 수 있는 계정과 그룹을 확인합니다. 불필요한 주체에 이 권한을 주면 원격 접근 경로가 넓어지며, 실제 자원 접근에는 공유·파일 권한 등 추가 통제도 적용됩니다."
+  },
+  {
+    "Scope": "Machine",
+    "ID": "1201",
+    "Name": "Allow log on locally",
+    "Description": "컴퓨터의 로컬 콘솔에서 대화형 로그온을 할 수 있는 계정과 그룹을 확인합니다. 직접 장치를 사용하는 주체를 제한하는 기준으로, 원격 데스크톱 로그온 권한과는 별도로 관리됩니다."
+  },
+  {
+    "Scope": "Machine",
+    "ID": "1202",
+    "Name": "Debug programs",
+    "Description": "다른 프로세스를 디버깅할 수 있는 SeDebugPrivilege 권한의 보유자를 확인합니다. 이 권한은 다른 계정으로 실행 중인 프로세스의 메모리 접근이나 실행 조작에 이용될 수 있어 자격 증명 탈취와 권한 악용 측면에서 민감합니다."
+  },
+  {
+    "Scope": "Machine",
+    "ID": "1203",
+    "Name": "Deny access to this computer from the network",
+    "Description": "네트워크 로그온을 명시적으로 거부할 계정과 그룹을 확인합니다. 게스트나 로컬 계정의 원격 사용을 제한하면 탈취한 로컬 자격 증명을 다른 컴퓨터로 확산하는 데 사용하는 경로를 줄일 수 있으며, 거부 권한은 허용 권한보다 우선합니다."
+  },
+  {
+    "Scope": "Machine",
+    "ID": "1204",
+    "Name": "Deny log on as a batch job",
+    "Description": "예약 작업 등 일괄 처리 작업의 실행 계정으로 로그온하지 못하게 할 주체를 확인합니다. 게스트와 같은 불필요한 계정이 비대화형 작업을 실행하거나 지속 실행 경로를 만드는 것을 제한하는 데 관련됩니다."
+  },
+  {
+    "Scope": "Machine",
+    "ID": "1205",
+    "Name": "Deny log on as a service",
+    "Description": "Windows 서비스의 실행 계정으로 로그온하지 못하게 할 계정과 그룹을 확인합니다. 서비스 실행이 필요 없는 계정의 사용을 막으면 해당 계정을 이용한 백그라운드 실행과 지속성 확보 경로를 줄일 수 있습니다."
+  },
+  {
+    "Scope": "Machine",
+    "ID": "1206",
+    "Name": "Deny log on through Remote Desktop Services",
+    "Description": "원격 데스크톱 서비스를 통한 대화형 로그온을 명시적으로 거부할 주체를 확인합니다. 게스트나 로컬 계정의 원격 세션 생성을 제한하면 탈취된 계정을 이용한 원격 조작 범위를 줄이는 데 도움이 됩니다."
+  },
+  {
+    "Scope": "Machine",
+    "ID": "1300",
+    "Name": "Accounts: Block Microsoft accounts",
+    "Description": "개인 Microsoft 계정을 Windows에 추가하거나 해당 계정으로 로그온하는 것을 제한하는 정책을 확인합니다. 조직에서 관리하지 않는 클라우드 계정과의 연결 및 데이터 동기화 경로를 통제하는 데 관련됩니다."
+  },
+  {
+    "Scope": "Machine",
+    "ID": "1301",
+    "Name": "Audit: Force audit policy subcategory settings to override audit policy category settings",
+    "Description": "세부 감사 하위 범주 설정이 기존의 넓은 감사 범주 설정보다 우선하도록 구성했는지 확인합니다. 상위 범주 정책 때문에 의도한 세부 감사 항목이 덮어써져 보안 이벤트 기록이 빠지는 상황을 방지하는 데 중요합니다."
+  },
+  {
+    "Scope": "Machine",
+    "ID": "1328",
+    "Name": "Devices: Prevent users from installing printer drivers",
+    "Description": "공유 프린터에 연결할 때 일반 사용자가 프린터 드라이버를 설치할 수 있는지 확인합니다. 드라이버 설치는 높은 권한의 인쇄 구성 요소에 코드를 추가할 수 있는 경로이므로 설치 주체를 제한하는 것이 중요합니다."
+  },
+  {
+    "Scope": "Machine",
+    "ID": "1302",
+    "Name": "Interactive logon: Do not require CTRL+ALT+DEL",
+    "Description": "로그온 전에 보안 주의 키 조합인 CTRL+ALT+DEL을 요구하는지 확인합니다. 이 절차는 사용자가 일반 프로그램이 만든 가짜 암호 입력 화면이 아니라 Windows의 신뢰할 수 있는 로그온 경로를 사용하도록 돕습니다."
+  },
+  {
+    "Scope": "Machine",
+    "ID": "1303",
+    "Name": "Interactive logon: Don't display last signed-in",
+    "Description": "로그온 화면에 마지막으로 로그인한 사용자의 이름을 표시하는지 확인합니다. 이전 사용자의 계정 식별자가 노출되면 주변 사람이나 공격자가 계정을 추측하거나 표적을 정하는 데 이용할 수 있습니다."
+  },
+  {
+    "Scope": "Machine",
+    "ID": "1304",
+    "Name": "Interactive logon: Don't display username at sign-in",
+    "Description": "로그인 과정에서 사용자 이름이 화면에 표시되는 것을 제한하는지 확인합니다. 인증 화면을 볼 수 있는 사람에게 계정 식별 정보가 노출되는 범위를 줄이는 개인정보 및 계정 정보 보호 설정입니다."
+  },
+  {
+    "Scope": "Machine",
+    "ID": "1305",
+    "Name": "Microsoft network client: Digitally sign communications (always)",
+    "Description": "이 컴퓨터가 SMB 클라이언트로 공유 서버에 접속할 때 메시지 서명을 반드시 요구하는지 확인합니다. 서명은 통신 중 메시지 변조와 일부 중간자 공격을 억제하는 무결성 보호 수단이며, 파일 내용을 숨기는 암호화와는 다릅니다."
+  },
+  {
+    "Scope": "Machine",
+    "ID": "1306",
+    "Name": "Microsoft network client: Digitally sign communications (if server agrees)",
+    "Description": "SMB 서버가 서명을 지원하고 협상에 동의할 때 클라이언트가 메시지 서명을 사용하도록 구성했는지 확인합니다. 협상 가능한 연결의 무결성 보호에 관련되지만, 서명을 항상 요구하는 정책과 달리 모든 연결에 서명을 강제한다는 뜻은 아닙니다."
+  },
+  {
+    "Scope": "Machine",
+    "ID": "1329",
+    "Name": "Microsoft network client: Send unencrypted password to third-party SMB servers",
+    "Description": "외부 SMB 서버와 호환하기 위해 암호를 암호화하지 않은 형태로 전송할 수 있는지 확인합니다. 평문 암호 전송을 허용하면 통신을 관찰하거나 서버를 사칭하는 주체에게 재사용 가능한 암호가 노출될 수 있습니다."
+  },
+  {
+    "Scope": "Machine",
+    "ID": "1307",
+    "Name": "Microsoft network server: Digitally sign communications (always)",
+    "Description": "이 컴퓨터가 SMB 서버로 공유를 제공할 때 접속 클라이언트에 메시지 서명을 필수로 요구하는지 확인합니다. 서명 없는 연결을 받지 않도록 하는 것은 공유 통신의 변조 위험을 줄이는 데 관련되며, 데이터 암호화 여부는 별도로 확인해야 합니다."
+  },
+  {
+    "Scope": "Machine",
+    "ID": "1308",
+    "Name": "Microsoft network server: Digitally sign communications (if client agrees)",
+    "Description": "SMB 클라이언트가 동의할 경우 서버가 메시지 서명을 사용하도록 구성했는지 확인합니다. 지원되는 연결에서 메시지 무결성을 보호할 수 있지만, 협상에 따른 사용은 서명 없는 클라이언트를 일괄 거부하는 설정과 구분됩니다."
+  },
+  {
+    "Scope": "Machine",
+    "ID": "1309",
+    "Name": "Network access: Do not allow anonymous enumeration of SAM accounts",
+    "Description": "인증하지 않은 네트워크 사용자가 로컬 SAM에 저장된 계정 목록을 열거할 수 있는지 확인합니다. 계정 이름의 익명 수집을 제한하면 암호 추측이나 표적 계정 선정에 쓰일 정보를 줄일 수 있습니다."
+  },
+  {
+    "Scope": "Machine",
+    "ID": "1310",
+    "Name": "Network access: Do not allow anonymous enumeration of SAM accounts and shares",
+    "Description": "익명 연결에서 로컬 계정과 네트워크 공유 목록을 알아낼 수 있는 범위를 제한하는지 확인합니다. 계정뿐 아니라 공유 자원의 이름과 존재 여부가 노출되는 것을 줄여 인증 전 정찰에 필요한 정보를 제한합니다."
+  },
+  {
+    "Scope": "Machine",
+    "ID": "1311",
+    "Name": "Network access: Do not allow storage of passwords and credentials for network authentication",
+    "Description": "나중에 네트워크 인증에 재사용할 암호와 자격 증명을 자격 증명 관리자에 저장할 수 있는지 확인합니다. 저장을 제한하면 장치가 침해됐을 때 추가 네트워크 자원으로 접근하는 데 악용될 저장 자격 증명의 범위를 줄일 수 있습니다."
+  },
+  {
+    "Scope": "Machine",
+    "ID": "1324",
+    "Name": "Network access: Restrict anonymous access to Named Pipes and Shares",
+    "Description": "인증 정보가 없는 익명 세션의 명명된 파이프와 공유 접근을 제한하는지 확인합니다. 별도로 허용한 대상을 제외한 익명 접근을 통제하면 원격 서비스와 공유 자원에 대한 인증 없는 접근 경로를 줄일 수 있습니다."
+  },
+  {
+    "Scope": "Machine",
+    "ID": "1325",
+    "Name": "Network access: Restrict clients allowed to make remote calls to SAM",
+    "Description": "로컬 계정 데이터베이스인 SAM에 원격 호출을 할 수 있는 주체를 보안 설명자로 제한하는지 확인합니다. 원격 계정·그룹 정보 조회 범위를 관리 주체로 좁히는 것은 계정 정찰과 불필요한 정보 노출을 줄이는 데 관련됩니다."
+  },
+  {
+    "Scope": "Machine",
+    "ID": "1312",
+    "Name": "Network security: Allow LocalSystem NULL session fallback",
+    "Description": "LocalSystem으로 실행되는 구성 요소가 정상 자격 증명으로 네트워크 인증을 하지 못할 때 익명 세션으로 전환할 수 있는지 확인합니다. 이런 대체 동작을 제한하면 서비스가 인증되지 않은 연결로 예상치 못하게 통신하는 경로를 줄일 수 있습니다."
+  },
+  {
+    "Scope": "Machine",
+    "ID": "1326",
+    "Name": "Network security: Do not store LAN Manager hash value on next password change",
+    "Description": "다음 암호 변경부터 취약한 구형 LAN Manager 암호 해시를 저장하지 않도록 설정했는지 확인합니다. LM 해시는 암호 추측에 취약하며, 이 정책을 설정하는 것만으로 기존 암호의 저장 상태가 즉시 모두 바뀌는 것은 아닙니다."
+  },
+  {
+    "Scope": "Machine",
+    "ID": "1313",
+    "Name": "Network security: LAN Manager authentication level",
+    "Description": "네트워크 인증에서 LM·NTLM·NTLMv2 중 어떤 응답 방식을 보내고 받아들일지 정하는 수준을 확인합니다. 취약한 구형 인증을 제한하는 것은 중요하지만, NTLMv2를 사용한다는 사실만으로 모든 자격 증명 릴레이 위험이 사라지는 것은 아닙니다."
+  },
+  {
+    "Scope": "Machine",
+    "ID": "1330",
+    "Name": "Network security: LDAP client encryption requirements",
+    "Description": "LDAP 클라이언트가 디렉터리 서버와 통신할 때 요구하는 암호화 수준을 확인합니다. 계정 및 디렉터리 정보가 네트워크에서 노출될 위험을 줄이는 데 관련되며, 메시지 변조를 막는 서명 요구와는 별개의 보호 설정입니다."
+  },
+  {
+    "Scope": "Machine",
+    "ID": "1314",
+    "Name": "Network security: LDAP client signing requirements",
+    "Description": "LDAP 클라이언트가 디렉터리 요청에 대해 서명을 협상하거나 필수로 요구하는 수준을 확인합니다. 서명은 디렉터리 통신의 변조를 탐지하는 데 관련되며, 서명 협상 설정을 모든 연결에 대한 서명 강제와 동일하게 해석해서는 안 됩니다."
+  },
+  {
+    "Scope": "Machine",
+    "ID": "1315",
+    "Name": "Network security: Minimum session security for NTLM SSP based (including secure RPC) clients",
+    "Description": "NTLM 보안 지원 공급자를 사용하는 클라이언트 연결에 NTLMv2 세션 보안과 128비트 키 강도 등 최소 요건을 요구하는지 확인합니다. 구형 상대와 연결할 때 약한 세션 보안으로 협상되는 범위를 제한하는 설정입니다."
+  },
+  {
+    "Scope": "Machine",
+    "ID": "1316",
+    "Name": "Network security: Minimum session security for NTLM SSP based (including secure RPC) servers",
+    "Description": "이 컴퓨터가 서버로 받는 NTLM 기반 연결에 NTLMv2 세션 보안과 128비트 키 강도 등 최소 요건을 적용하는지 확인합니다. 보호 수준이 낮은 클라이언트 연결을 받아들이는 범위를 줄여 서버 측 세션 보안 기준을 유지하는 데 관련됩니다."
+  },
+  {
+    "Scope": "Machine",
+    "ID": "1317",
+    "Name": "Network security: Restrict NTLM: Audit Incoming NTLM Traffic",
+    "Description": "이 컴퓨터로 들어오는 NTLM 인증 요청을 감사 로그에 기록하도록 구성했는지 확인합니다. NTLM을 사용하는 계정과 서비스의 의존성을 조사하는 데 도움이 되지만, 감사 설정 자체가 해당 인증을 차단하는 것은 아닙니다."
+  },
+  {
+    "Scope": "Machine",
+    "ID": "1318",
+    "Name": "Network security: Restrict NTLM: Audit NTLM authentication in this domain",
+    "Description": "도메인 컨트롤러가 처리하는 도메인 내 NTLM 인증을 감사하도록 구성했는지 확인합니다. 도메인 차원의 NTLM 사용 경로를 파악하고 제한 정책의 영향을 검토하는 데 쓰이는 설정으로, 컴퓨터 역할에 따라 적용 의미가 달라집니다."
+  },
+  {
+    "Scope": "Machine",
+    "ID": "1319",
+    "Name": "Network security: Restrict NTLM: Outgoing NTLM traffic to remote servers",
+    "Description": "원격 서버로 보내는 NTLM 인증을 허용·감사·차단하는 정책 수준을 확인합니다. NTLM 의존 연결과 자격 증명 릴레이 노출 범위를 관리하는 데 관련되며, 감사 모드만으로 원격 인증이 차단되지는 않습니다."
+  },
+  {
+    "Scope": "Machine",
+    "ID": "1320",
+    "Name": "Shutdown: Allow system to be shut down without having to log on",
+    "Description": "로그온하지 않은 상태에서 Windows 화면을 통해 컴퓨터를 종료할 수 있는지 확인합니다. 인증되지 않은 사용자의 손쉬운 서비스 중단을 제한하는 설정이며, 물리적 전원 조작까지 막는 기능은 아닙니다."
+  },
+  {
+    "Scope": "Machine",
+    "ID": "1321",
+    "Name": "User Account Control: Admin Approval Mode for the Built-in Administrator account",
+    "Description": "기본 제공 Administrator 계정에도 UAC 관리자 승인 모드를 적용하는지 확인합니다. 일상 실행과 관리자 권한 실행을 구분하여 높은 권한의 작업을 별도 승인 절차에 연결하는 데 관련됩니다."
+  },
+  {
+    "Scope": "Machine",
+    "ID": "1322",
+    "Name": "User Account Control: Behavior of the elevation prompt for administrators in Admin Approval Mode",
+    "Description": "승인 모드의 관리자가 권한을 높일 때 동의나 자격 증명을 요구하는 방식과 보안 데스크톱 사용 여부를 확인합니다. 명확한 승인 절차와 격리된 입력 화면은 프로그램의 무단 권한 상승 및 승인 화면 조작 위험을 줄이는 데 관련됩니다."
+  },
+  {
+    "Scope": "Machine",
+    "ID": "1323",
+    "Name": "User Account Control: Behavior of the elevation prompt for standard users",
+    "Description": "표준 사용자의 관리자 권한 요청을 자동 거부할지, 관리자 자격 증명을 요구할지와 입력 화면의 보호 방식을 확인합니다. 일반 사용자 세션에서 높은 권한으로 전환되는 경로 및 관리자 암호 입력의 보호 수준에 영향을 줍니다."
+  },
+  {
+    "Scope": "Machine",
+    "ID": "1400",
+    "Name": "EnableFirewall (Domain Profile, Policy)",
+    "Description": "도메인 네트워크로 인식된 연결에 적용할 Windows 방화벽 활성화 정책을 확인합니다. 중앙 정책에서 방화벽 사용을 명시하면 조직 내부망에서도 불필요한 네트워크 접근을 통제하는 기반을 일관되게 유지할 수 있습니다."
+  },
+  {
+    "Scope": "Machine",
+    "ID": "1418",
+    "Name": "EnableFirewall (Domain Profile)",
+    "Description": "시스템의 도메인 프로필 설정에서 Windows 방화벽 사용 여부를 확인합니다. 조직 내부망도 다른 장치의 침해를 통한 접근이 가능하므로 호스트별 방화벽이 중요하며, 이 값만으로 현재 연결의 프로필이나 최종 정책 적용 상태를 모두 알 수는 없습니다."
+  },
+  {
+    "Scope": "Machine",
+    "ID": "1401",
+    "Name": "Inbound Connections (Domain Profile, Policy)",
+    "Description": "도메인 프로필에서 별도 규칙과 일치하지 않는 수신 연결을 허용할지 차단할지 정하는 정책을 확인합니다. 기본 수신 차단은 내부망에서 예기치 않은 서비스에 접근하는 경로를 줄이면서 필요한 서비스만 예외로 관리하게 합니다."
+  },
+  {
+    "Scope": "Machine",
+    "ID": "1419",
+    "Name": "Inbound Connections (Domain Profile)",
+    "Description": "시스템의 도메인 방화벽 프로필에 저장된 기본 수신 연결 처리 방식을 확인합니다. 별도 허용 규칙이 없는 접근을 차단하는 기준은 내부망 장치에서 시작되는 불필요한 연결을 제한하는 데 중요합니다."
+  },
+  {
+    "Scope": "Machine",
+    "ID": "1402",
+    "Name": "Outbound Connections (Domain Profile, Policy)",
+    "Description": "도메인 프로필에서 개별 규칙과 일치하지 않는 송신 연결의 기본 처리 정책을 확인합니다. 기본 허용은 정상 통신을 유지하지만 외부 유출이나 악성 서버 접속을 모두 막지는 않으므로 별도 송신 규칙과 구분해 해석해야 합니다."
+  },
+  {
+    "Scope": "Machine",
+    "ID": "1420",
+    "Name": "Outbound Connections (Domain Profile)",
+    "Description": "시스템의 도메인 프로필에서 프로그램이 시작하는 송신 연결을 기본적으로 허용할지 차단할지 확인합니다. 이 설정은 내부망에 연결된 컴퓨터의 외부 통신 범위에 영향을 주며, 방화벽이 켜져 있다는 사실만으로 송신이 제한된다고 볼 수는 없습니다."
+  },
+  {
+    "Scope": "Machine",
+    "ID": "1403",
+    "Name": "Log size limit (Domain Profile, Policy)",
+    "Description": "도메인 프로필의 방화벽 로그 파일에 정책으로 지정한 최대 크기를 확인합니다. 크기 한도가 작으면 트래픽이 많은 환경에서 과거 기록이 빨리 덮어써져 내부망 침해 조사에 필요한 흔적이 사라질 수 있습니다."
+  },
+  {
+    "Scope": "Machine",
+    "ID": "1421",
+    "Name": "Log size limit (Domain Profile)",
+    "Description": "시스템의 도메인 프로필에 설정된 방화벽 로그 파일 용량 한도를 확인합니다. 충분한 기록 공간은 과거 연결과 차단 흔적을 보존하는 데 도움이 되지만, 로그 수집 자체의 활성화 및 별도 보관 정책도 필요합니다."
+  },
+  {
+    "Scope": "Machine",
+    "ID": "1404",
+    "Name": "Log dropped packets (Domain Profile, Policy)",
+    "Description": "도메인 네트워크에서 방화벽이 버린 패킷을 기록하도록 정책에 지정했는지 확인합니다. 차단된 통신 흔적은 내부망 포트 탐색이나 잘못된 접근 시도를 조사하고 규칙 문제를 분석하는 근거가 됩니다."
+  },
+  {
+    "Scope": "Machine",
+    "ID": "1422",
+    "Name": "Log dropped packets (Domain Profile)",
+    "Description": "시스템의 도메인 방화벽 프로필에서 차단 패킷 기록이 설정되어 있는지 확인합니다. 방화벽이 접근을 막았더라도 기록이 없으면 반복된 내부 접근 시도와 연결 장애의 원인을 사후에 파악하기 어렵습니다."
+  },
+  {
+    "Scope": "Machine",
+    "ID": "1405",
+    "Name": "Log successful connections (Domain Profile, Policy)",
+    "Description": "도메인 프로필에서 허용된 연결을 방화벽 로그에 남기도록 정책으로 지정했는지 확인합니다. 성공한 통신 기록은 차단 기록만으로 보이지 않는 정상·비정상 접속 경로를 비교하고 내부 이동 정황을 조사하는 데 도움이 됩니다."
+  },
+  {
+    "Scope": "Machine",
+    "ID": "1423",
+    "Name": "Log successful connections (Domain Profile)",
+    "Description": "시스템의 도메인 프로필에서 성공한 연결을 방화벽 로그에 기록하도록 설정했는지 확인합니다. 허용된 통신의 상대와 시점을 추적할 수 있는 자료이며, 연결 성공 자체가 통신의 정당성이나 안전성을 뜻하지는 않습니다."
+  },
+  {
+    "Scope": "Machine",
+    "ID": "1406",
+    "Name": "EnableFirewall (Private Profile, Policy)",
+    "Description": "개인 네트워크로 분류된 연결에서 Windows 방화벽을 사용하도록 정책을 지정했는지 확인합니다. 신뢰하는 장소로 분류했더라도 같은 네트워크의 다른 장치가 안전하다는 보장은 없으므로 호스트 접근 통제를 유지하는 것이 중요합니다."
+  },
+  {
+    "Scope": "Machine",
+    "ID": "1424",
+    "Name": "EnableFirewall (Private Profile)",
+    "Description": "시스템의 개인 네트워크 방화벽 프로필에서 방화벽 사용 여부를 확인합니다. 가정이나 사내 소규모 네트워크에서도 다른 장치로부터 불필요한 연결을 제한하는 기반이며, 프로필 이름만으로 네트워크의 안전성을 판단할 수는 없습니다."
+  },
+  {
+    "Scope": "Machine",
+    "ID": "1407",
+    "Name": "Inbound Connections (Private Profile, Policy)",
+    "Description": "개인 프로필에서 별도 규칙이 없는 수신 연결의 기본 허용·차단 방식을 정책으로 정했는지 확인합니다. 기본 수신 차단은 같은 네트워크의 장치가 필요하지 않은 로컬 서비스에 접근하는 것을 제한합니다."
+  },
+  {
+    "Scope": "Machine",
+    "ID": "1425",
+    "Name": "Inbound Connections (Private Profile)",
+    "Description": "시스템의 개인 프로필에서 명시적 규칙과 일치하지 않는 수신 연결을 어떻게 처리하도록 설정했는지 확인합니다. 개인 네트워크에서도 필요한 공유 기능만 예외로 열고 나머지 접근을 제한하는 기준이 됩니다."
+  },
+  {
+    "Scope": "Machine",
+    "ID": "1408",
+    "Name": "Outbound Connections (Private Profile, Policy)",
+    "Description": "개인 프로필에 적용할 기본 송신 연결 처리 정책을 확인합니다. 기본 허용은 애플리케이션 통신을 가능하게 하지만 악성 프로그램의 외부 접속까지 구별해 차단하는 것은 아니므로 별도 규칙의 역할을 함께 고려해야 합니다."
+  },
+  {
+    "Scope": "Machine",
+    "ID": "1426",
+    "Name": "Outbound Connections (Private Profile)",
+    "Description": "개인 네트워크에서 프로그램이 시작한 연결에 적용할 시스템의 기본 송신 동작을 확인합니다. 개별 규칙이 없는 통신의 허용 범위를 결정하며, 송신 기본값과 특정 목적지·프로그램을 제한하는 규칙은 서로 다른 통제입니다."
+  },
+  {
+    "Scope": "Machine",
+    "ID": "1409",
+    "Name": "Log size limit (Private Profile, Policy)",
+    "Description": "개인 프로필의 방화벽 로그에 정책으로 지정한 최대 파일 크기를 확인합니다. 기록 공간이 부족하면 가정이나 소규모 네트워크에서 발생한 접근 흔적이 빨리 교체되어 조사 가능한 기간이 짧아집니다."
+  },
+  {
+    "Scope": "Machine",
+    "ID": "1427",
+    "Name": "Log size limit (Private Profile)",
+    "Description": "시스템의 개인 프로필에 설정된 방화벽 로그 용량 한도를 확인합니다. 연결 및 차단 기록을 어느 정도 보존할 수 있는지에 영향을 주며, 실제 보존 시간은 트래픽량과 기록 항목에 따라 달라집니다."
+  },
+  {
+    "Scope": "Machine",
+    "ID": "1410",
+    "Name": "Log dropped packets (Private Profile, Policy)",
+    "Description": "개인 네트워크에서 방화벽이 차단한 패킷을 기록하도록 정책에 지정했는지 확인합니다. 같은 네트워크의 장치가 시도한 불필요한 접근과 방화벽 규칙에 막힌 정상 통신을 구분하는 조사 자료가 됩니다."
+  },
+  {
+    "Scope": "Machine",
+    "ID": "1428",
+    "Name": "Log dropped packets (Private Profile)",
+    "Description": "시스템의 개인 프로필에서 차단된 패킷의 로그 기록 여부를 확인합니다. 이 기록은 근처 장치의 포트 탐색이나 반복 접근을 사후에 파악하는 데 도움이 되며, 기록 기능 자체가 추가 차단 규칙을 만드는 것은 아닙니다."
+  },
+  {
+    "Scope": "Machine",
+    "ID": "1411",
+    "Name": "Log successful connections (Private Profile, Policy)",
+    "Description": "개인 프로필에서 허용된 연결을 로그에 남기도록 정책으로 지정했는지 확인합니다. 실제로 성립한 통신의 흔적을 확보하면 신뢰한 네트워크 안에서도 예상 밖의 접속 경로를 조사할 수 있습니다."
+  },
+  {
+    "Scope": "Machine",
+    "ID": "1429",
+    "Name": "Log successful connections (Private Profile)",
+    "Description": "시스템의 개인 네트워크 프로필에서 성공한 연결 기록을 설정했는지 확인합니다. 허용된 통신도 침해에 이용될 수 있으므로 성공 기록은 차단 로그를 보완하는 접속 추적 자료가 됩니다."
+  },
+  {
+    "Scope": "Machine",
+    "ID": "1412",
+    "Name": "EnableFirewall (Public Profile, Policy)",
+    "Description": "공용 네트워크로 분류된 연결에서 Windows 방화벽을 사용하도록 정책에 지정했는지 확인합니다. 신뢰하지 않는 주변 장치가 많은 환경에서 로컬 서비스 노출을 통제하는 기본 보호 수단에 해당합니다."
+  },
+  {
+    "Scope": "Machine",
+    "ID": "1430",
+    "Name": "EnableFirewall (Public Profile)",
+    "Description": "시스템의 공용 프로필 설정에서 Windows 방화벽 사용 여부를 확인합니다. 외부 Wi-Fi 같은 비신뢰 네트워크에서는 다른 참가자가 로컬 서비스에 접근할 수 있으므로 호스트 단위의 접근 제한이 특히 중요합니다."
+  },
+  {
+    "Scope": "Machine",
+    "ID": "1413",
+    "Name": "Inbound Connections (Public Profile, Policy)",
+    "Description": "공용 프로필에서 별도 규칙과 일치하지 않는 수신 연결을 차단할지 허용할지 정하는 정책을 확인합니다. 기본 수신 차단은 비신뢰 네트워크의 낯선 장치에 서비스가 불필요하게 노출되는 범위를 줄입니다."
+  },
+  {
+    "Scope": "Machine",
+    "ID": "1431",
+    "Name": "Inbound Connections (Public Profile)",
+    "Description": "시스템의 공용 방화벽 프로필에 지정된 기본 수신 연결 처리 방식을 확인합니다. 명시적으로 허용하지 않은 접근을 제한하는 기준으로, 다른 프로필에서 필요한 공유 기능을 공용 환경에 그대로 노출하지 않는 데 관련됩니다."
+  },
+  {
+    "Scope": "Machine",
+    "ID": "1414",
+    "Name": "Outbound Connections (Public Profile, Policy)",
+    "Description": "공용 프로필에서 개별 규칙이 없는 송신 연결의 기본 동작을 정책으로 확인합니다. 기본 허용이라면 프로그램의 외부 접속은 계속 가능하므로, 공용망 방화벽 활성화와 송신 통신 제한을 동일한 의미로 해석하면 안 됩니다."
+  },
+  {
+    "Scope": "Machine",
+    "ID": "1432",
+    "Name": "Outbound Connections (Public Profile)",
+    "Description": "시스템의 공용 프로필에서 프로그램이 시작하는 송신 연결을 기본 허용할지 차단할지 확인합니다. 비신뢰 네트워크로 나가는 통신의 범위에 영향을 주지만, 전송 데이터의 암호화나 상대 서버의 신뢰성을 보장하는 설정은 아닙니다."
+  },
+  {
+    "Scope": "Machine",
+    "ID": "1415",
+    "Name": "Log size limit (Public Profile, Policy)",
+    "Description": "공용 프로필의 방화벽 로그 파일에 정책으로 지정된 크기 한도를 확인합니다. 외부 네트워크에서 많은 접근 시도가 발생할 때 로그가 너무 빨리 덮어써지지 않도록 조사 자료의 보존 여유를 확보하는 데 관련됩니다."
+  },
+  {
+    "Scope": "Machine",
+    "ID": "1433",
+    "Name": "Log size limit (Public Profile)",
+    "Description": "시스템의 공용 방화벽 프로필에 설정된 로그 파일의 최대 용량을 확인합니다. 제한된 공간에서 오래된 연결·차단 기록이 교체되는 속도에 영향을 주므로, 외부망 이용 중 발생한 사건의 추적 가능성과 관련됩니다."
+  },
+  {
+    "Scope": "Machine",
+    "ID": "1416",
+    "Name": "Log dropped packets (Public Profile, Policy)",
+    "Description": "공용 네트워크에서 차단된 패킷을 방화벽 로그에 남기도록 정책에 지정했는지 확인합니다. 비신뢰 장치의 포트 탐색이나 접근 시도가 언제 어디서 발생했는지 조사할 근거를 확보하는 설정입니다."
+  },
+  {
+    "Scope": "Machine",
+    "ID": "1434",
+    "Name": "Log dropped packets (Public Profile)",
+    "Description": "시스템의 공용 프로필에서 방화벽이 버린 패킷의 기록 여부를 확인합니다. 외부 네트워크의 반복 접근과 차단 원인을 추적하는 데 유용하지만, 차단 기록만으로 해당 시도가 모두 공격이라고 단정할 수는 없습니다."
+  },
+  {
+    "Scope": "Machine",
+    "ID": "1417",
+    "Name": "Log successful connections (Public Profile, Policy)",
+    "Description": "공용 프로필에서 허용된 연결을 기록하도록 정책으로 지정했는지 확인합니다. 비신뢰 네트워크에서도 실제 성립한 통신의 흔적을 남기면 예상하지 못한 목적지나 접속 경로를 사후에 조사할 수 있습니다."
+  },
+  {
+    "Scope": "Machine",
+    "ID": "1435",
+    "Name": "Log successful connections (Public Profile)",
+    "Description": "시스템의 공용 프로필에서 성공한 연결의 방화벽 로그 기록 여부를 확인합니다. 차단되지 않은 통신의 상대와 시점을 추적하는 자료이며, 기록된 연결이 안전하다고 인증하는 기능은 아닙니다."
+  },
+  {
+    "Scope": "Machine",
+    "ID": "1500",
+    "Name": "Credential Validation",
+    "Description": "인증을 담당하는 컴퓨터가 계정 자격 증명의 검증 성공과 실패를 감사하도록 설정했는지 확인합니다. 특히 NTLM 등의 자격 증명 검증 흔적을 통해 반복 암호 추측과 비정상 인증 요청을 조사할 수 있습니다."
+  },
+  {
+    "Scope": "Machine",
+    "ID": "1501",
+    "Name": "Security Group Management",
+    "Description": "보안 그룹의 생성·변경·삭제와 구성원 추가·제거를 감사하도록 설정했는지 확인합니다. 관리자 그룹 등 권한을 부여하는 그룹의 변화를 추적하면 계정에 권한이 추가되거나 제거된 경위를 조사할 수 있습니다."
+  },
+  {
+    "Scope": "Machine",
+    "ID": "1502",
+    "Name": "User Account Management",
+    "Description": "사용자 계정의 생성·삭제·상태 변경 및 암호 관련 관리 작업을 감사하는지 확인합니다. 무단 계정 생성이나 기존 계정의 보안 속성 변경을 추적하는 근거가 되며, 관리 작업의 성공뿐 아니라 실패 기록도 조사에 도움이 됩니다."
+  },
+  {
+    "Scope": "Machine",
+    "ID": "1503",
+    "Name": "DPAPI Activity",
+    "Description": "Windows 데이터 보호 API인 DPAPI의 마스터 키 백업·복구 관련 작업을 감사하는지 확인합니다. 저장된 비밀정보의 보호에 쓰이는 키가 어떤 경로로 취급되는지 추적하는 데 관련되며, 모든 데이터 암호화 호출을 기록한다는 뜻은 아닙니다."
+  },
+  {
+    "Scope": "Machine",
+    "ID": "1504",
+    "Name": "Plug and Play Events",
+    "Description": "플러그 앤 플레이 장치의 인식 등 하드웨어 연결 관련 이벤트를 감사하는지 확인합니다. USB 장치와 같은 주변기기의 연결 흔적을 남기면 승인되지 않은 장치 사용이나 데이터 이동 정황을 조사하는 데 도움이 됩니다."
+  },
+  {
+    "Scope": "Machine",
+    "ID": "1505",
+    "Name": "Process Creation",
+    "Description": "새 프로세스가 시작될 때 실행 주체와 실행 파일 등 생성 이벤트를 감사하도록 설정했는지 확인합니다. 악성 실행의 시작점과 부모·자식 프로세스 관계를 추적하는 기초 자료이며, 명령줄 내용 기록은 별도 설정이 필요할 수 있습니다."
+  },
+  {
+    "Scope": "Machine",
+    "ID": "1506",
+    "Name": "Account Lockout",
+    "Description": "잠긴 계정으로 로그온을 시도해 거부되는 이벤트를 감사하도록 설정했는지 확인합니다. 잠금 뒤에도 계속되는 암호 추측이나 오래된 자격 증명을 반복 사용하는 프로그램을 구분해 조사하는 데 도움이 됩니다."
+  },
+  {
+    "Scope": "Machine",
+    "ID": "1507",
+    "Name": "Group Membership",
+    "Description": "로그온한 계정의 토큰에 포함되는 그룹 구성원 정보를 감사하도록 설정했는지 확인합니다. 접속 당시 어떤 그룹 권한을 가진 세션이 생성됐는지 파악할 수 있어 권한이 높은 계정의 활동을 분석하는 근거가 됩니다."
+  },
+  {
+    "Scope": "Machine",
+    "ID": "1508",
+    "Name": "Logon",
+    "Description": "이 컴퓨터에 대한 로그온 성공과 실패를 보안 로그에 남기도록 설정했는지 확인합니다. 로그인한 주체와 접근 방식, 실패 양상을 분석하여 비정상 접속과 계정 공격을 조사하는 핵심 기록입니다."
+  },
+  {
+    "Scope": "Machine",
+    "ID": "1509",
+    "Name": "Other Logon/Logoff Events",
+    "Description": "화면 잠금·잠금 해제와 원격 세션 연결·재연결 등 일반 로그온 외의 세션 이벤트를 감사하는지 확인합니다. 세션이 실제로 사용되거나 다시 접근된 시점을 보완하여 사용자 활동과 무단 접근 정황을 추적하는 데 도움이 됩니다."
+  },
+  {
+    "Scope": "Machine",
+    "ID": "1510",
+    "Name": "Special Logon",
+    "Description": "민감한 특권이 부여된 새 로그온 세션의 생성을 감사하도록 설정했는지 확인합니다. 관리자 수준 세션의 시작을 식별하는 자료이며, 특권이 부여됐다는 기록과 그 특권을 실제로 사용했다는 기록은 구분해야 합니다."
+  },
+  {
+    "Scope": "Machine",
+    "ID": "1511",
+    "Name": "Detailed File Share",
+    "Description": "네트워크 공유를 통해 개별 파일이나 폴더에 접근할 때 수행되는 상세 권한 검사 이벤트를 감사하는지 확인합니다. 거부된 접근 기록을 통해 어떤 공유 경로를 어떤 주체가 시도했는지 조사할 수 있으나 로컬 파일 접근 감사와는 별도입니다."
+  },
+  {
+    "Scope": "Machine",
+    "ID": "1512",
+    "Name": "File Share",
+    "Description": "네트워크 공유의 접근 및 공유 생성·변경·삭제 관련 이벤트를 감사하는지 확인합니다. 원격 사용자가 공유를 이용한 흔적과 공유 구성의 변화를 추적하는 데 쓰이며, 모든 개별 파일 작업의 상세 기록을 의미하지는 않습니다."
+  },
+  {
+    "Scope": "Machine",
+    "ID": "1513",
+    "Name": "Kernel Object",
+    "Description": "프로세스 간 통신이나 동기화에 사용되는 커널 객체에 대한 접근을 감사하도록 설정했는지 확인합니다. 해당 객체의 감사 조건과 함께 적용되어 비정상 접근이나 권한 문제를 추적하는 근거가 됩니다."
+  },
+  {
+    "Scope": "Machine",
+    "ID": "1514",
+    "Name": "Other Object Access Events",
+    "Description": "예약 작업의 생성·변경·삭제 등 다른 개체 접근 범주에 속하는 이벤트를 감사하는지 확인합니다. 공격자가 자동 실행 작업을 등록하거나 변경해 지속 실행을 확보한 흔적을 조사하는 데 도움이 됩니다."
+  },
+  {
+    "Scope": "Machine",
+    "ID": "1515",
+    "Name": "Removable Storage",
+    "Description": "USB 저장장치 등 이동식 저장소의 파일 접근을 감사하도록 설정했는지 확인합니다. 외부 매체를 통한 정보 반출이나 파일 유입을 조사하는 근거가 되지만, 감사 활성화만으로 장치 사용이나 복사가 차단되지는 않습니다."
+  },
+  {
+    "Scope": "Machine",
+    "ID": "1516",
+    "Name": "SAM",
+    "Description": "로컬 계정과 그룹 정보를 관리하는 SAM 객체에 대한 접근을 감사하도록 설정했는지 확인합니다. 객체에 적용된 감사 조건에 따라 계정 데이터 조회나 변경 시도를 추적하는 자료가 되어 계정 정보에 대한 비정상 접근 조사에 도움이 됩니다."
+  },
+  {
+    "Scope": "Machine",
+    "ID": "1517",
+    "Name": "Audit Policy Change",
+    "Description": "시스템 감사 정책 등 감사 동작을 결정하는 설정의 변경을 기록하도록 구성했는지 확인합니다. 공격자가 기록을 줄이기 위해 감사 기능을 끄거나 범위를 바꾸는 행위를 추적하는 데 중요합니다."
+  },
+  {
+    "Scope": "Machine",
+    "ID": "1518",
+    "Name": "Authentication Policy Change",
+    "Description": "인증 및 로그온 권한과 관련된 정책 변경을 감사하도록 설정했는지 확인합니다. 누가 어떤 방식으로 접속할 수 있는지에 영향을 주는 변경을 추적하여 접근 범위가 부당하게 넓어진 경위를 조사할 수 있습니다."
+  },
+  {
+    "Scope": "Machine",
+    "ID": "1519",
+    "Name": "MPSSVC Rule-Level Policy Change",
+    "Description": "Windows 방화벽 서비스가 관리하는 규칙과 정책의 변경 관련 이벤트를 감사하는지 확인합니다. 허용 규칙 추가나 차단 규칙 변경으로 네트워크 노출 범위가 달라진 시점과 원인을 추적하는 데 사용됩니다."
+  },
+  {
+    "Scope": "Machine",
+    "ID": "1520",
+    "Name": "Other Policy Change Events",
+    "Description": "다른 정책 변경 하위 범주에 포함되지 않는 보안 정책 처리 이벤트를 감사하는지 확인합니다. 특히 정책 적용 실패 같은 흔적을 확보하면 의도한 보안 통제가 적용되지 않은 상황을 조사하는 데 도움이 됩니다."
+  },
+  {
+    "Scope": "Machine",
+    "ID": "1521",
+    "Name": "Sensitive Privilege Use",
+    "Description": "디버깅, 소유권 취득, 보안 정책 관리 등 민감한 특권을 사용하는 작업을 감사하는지 확인합니다. 단순한 관리자 로그온 여부를 넘어 실제 특권 사용의 성공·실패를 추적하여 권한 악용을 조사하는 데 관련됩니다."
+  },
+  {
+    "Scope": "Machine",
+    "ID": "1522",
+    "Name": "Other System Events",
+    "Description": "방화벽 서비스의 상태 변화 등 다른 시스템 감사 범주에 속하는 이벤트를 기록하는지 확인합니다. 보안 구성 요소의 중단이나 동작 이상을 사건 시각과 연결해 분석하는 보조 자료가 됩니다."
+  },
+  {
+    "Scope": "Machine",
+    "ID": "1523",
+    "Name": "Security State Change",
+    "Description": "시스템 시작·종료와 시스템 시간 변경 등 보안 상태 전환 이벤트를 감사하는지 확인합니다. 장치가 동작한 구간과 시간 변경 흔적은 보안 사건의 순서를 재구성하고 로그의 시간적 맥락을 해석하는 데 중요합니다."
+  },
+  {
+    "Scope": "Machine",
+    "ID": "1524",
+    "Name": "Security System Extension",
+    "Description": "보안 패키지나 인증 관련 확장 구성 요소의 로드 및 서비스 설치 관련 이벤트를 감사하는지 확인합니다. 시스템의 신뢰 영역에 새 코드가 들어온 흔적을 추적하여 악성 확장이나 지속 실행 구성의 등록 경위를 조사할 수 있습니다."
+  },
+  {
+    "Scope": "Machine",
+    "ID": "1525",
+    "Name": "System Integrity",
+    "Description": "코드 무결성이나 암호화 구성 요소 등에서 보고하는 시스템 무결성 관련 이벤트를 감사하는지 확인합니다. 검증 실패와 보호 기능의 오류를 기록해 비정상 코드 또는 보안 구성 요소 문제를 조사하는 데 사용되며, 감사 설정만으로 무결성이 보장되지는 않습니다."
+  },
+  {
+    "Scope": "Machine",
+    "ID": "1828",
+    "Name": "Allow Online Tips",
+    "Description": "Windows 설정 화면에서 온라인 도움말과 팁 콘텐츠를 가져와 표시할 수 있는지 확인합니다. 업무에 필요하지 않은 외부 콘텐츠 조회와 네트워크 통신을 제한하고 관리 환경의 노출 경로를 줄이는 데 관련됩니다."
+  },
+  {
+    "Scope": "Machine",
+    "ID": "1600",
+    "Name": "Personalization: Prevent enabling lock screen camera",
+    "Description": "장치가 잠긴 상태에서 잠금 화면의 카메라 기능을 사용할 수 있는지 확인합니다. 인증 전에 카메라 기능에 접근하는 경로를 제한하여 장치를 잠시 만질 수 있는 사람에 의한 촬영과 사생활 침해 위험을 줄이는 데 관련됩니다."
+  },
+  {
+    "Scope": "Machine",
+    "ID": "1829",
+    "Name": "Regional and Language Options: Allow users to enable online speech recognition services",
+    "Description": "사용자가 클라우드 기반 온라인 음성 인식 서비스를 활성화할 수 있는지 확인합니다. 음성 처리에 외부 서비스가 관여하는 경로를 통제하는 개인정보 보호 설정으로, 장치 내부에서 처리하는 모든 음성 기능을 의미하는 것은 아닙니다."
+  },
+  {
+    "Scope": "Machine",
+    "ID": "1830",
+    "Name": "DNS Client: Configure NetBIOS settings",
+    "Description": "DNS 클라이언트의 이름 확인 과정에서 기존 NetBIOS 이름 확인 방식을 사용할 수 있는지 확인합니다. 로컬 네트워크에서 이름 질의와 응답을 악용한 서버 사칭이나 불필요한 호스트 정보 노출을 줄이는 데 관련됩니다."
+  },
+  {
+    "Scope": "Machine",
+    "ID": "1601",
+    "Name": "DNS Client: Turn off multicast name resolution (LLMNR)",
+    "Description": "DNS로 이름을 확인하지 못했을 때 주변 네트워크 장치에 묻는 LLMNR 이름 확인을 허용하는지 확인합니다. 공격자가 이런 질의에 거짓 응답을 보내 인증을 유도하거나 자격 증명 릴레이를 시도하는 경로를 줄이는 데 중요합니다."
+  },
+  {
+    "Scope": "Machine",
+    "ID": "1831",
+    "Name": "Lanman Server: Audit client does not support encryption",
+    "Description": "SMB 서버에 접속하는 클라이언트가 SMB 암호화를 지원하지 않을 때 이를 감사하도록 설정했는지 확인합니다. 암호화 요구를 적용하기 전에 구형 클라이언트와 보호 수준이 낮은 연결 의존성을 파악하는 자료이며, 감사 자체가 연결을 암호화하지는 않습니다."
+  },
+  {
+    "Scope": "Machine",
+    "ID": "1832",
+    "Name": "Lanman Server: Audit client does not support signing",
+    "Description": "SMB 서버가 메시지 서명을 지원하지 않는 클라이언트의 접속을 감사하도록 설정했는지 확인합니다. 무결성 보호를 제공하지 못하는 클라이언트를 식별하고 서명 필수 정책의 호환성 영향을 검토하는 데 사용됩니다."
+  },
+  {
+    "Scope": "Machine",
+    "ID": "1833",
+    "Name": "Lanman Server: Audit insecure guest logon",
+    "Description": "SMB 서버 측에서 안전하지 않은 게스트 로그온 관련 이벤트를 기록하도록 설정했는지 확인합니다. 개별 사용자 인증 없이 공유에 접근하는 경로를 식별하는 데 도움이 되지만, 로그 기록과 게스트 연결 차단은 별도의 통제입니다."
+  },
+  {
+    "Scope": "Machine",
+    "ID": "1834",
+    "Name": "Lanman Server: Enable authentication rate limiter",
+    "Description": "SMB 서버에서 실패한 인증 요청을 처리할 때 속도 제한 기능을 사용하도록 설정했는지 확인합니다. 반복적인 암호 추측을 빠르게 수행하기 어렵게 하는 기능이며, 지연 시간과 계정 잠금 정책에 따라 실제 억제 효과가 달라집니다."
+  },
+  {
+    "Scope": "Machine",
+    "ID": "1835",
+    "Name": "Lanman Server: Enable remote mailslots",
+    "Description": "서버 측에서 구형의 단방향 메시지 전달 방식인 원격 메일슬롯을 허용하는지 확인합니다. 필요하지 않은 레거시 메시지 수신 경로를 제한하면 현대적인 인증·보호 기능이 부족한 통신 기능의 노출을 줄일 수 있습니다."
+  },
+  {
+    "Scope": "Machine",
+    "ID": "1836",
+    "Name": "Lanman Server: Mandate the minimum version of SMB",
+    "Description": "클라이언트가 공유에 접속할 때 서버가 받아들이는 SMB 프로토콜의 최저 버전을 확인합니다. 오래된 버전으로 협상되어 최신 인증 협상 보호 등의 기능을 사용하지 못하는 상황을 줄이기 위한 설정입니다."
+  },
+  {
+    "Scope": "Machine",
+    "ID": "1837",
+    "Name": "Lanman Server: Set authentication rate limiter delay (milliseconds)",
+    "Description": "SMB 인증 속도 제한 기능이 잘못된 인증 뒤에 적용하는 지연 시간을 밀리초 단위로 확인합니다. 충분한 지연은 연속 암호 추측의 처리 속도를 낮추지만, 이 값만으로 속도 제한 기능의 활성화까지 확인되는 것은 아닙니다."
+  },
+  {
+    "Scope": "Machine",
+    "ID": "1838",
+    "Name": "Lanman Workstation: Audit insecure guest logon",
+    "Description": "SMB 클라이언트가 원격 공유에서 안전하지 않은 게스트 로그온을 사용하는 상황을 감사하도록 설정했는지 확인합니다. 사용자별 인증에 의존하지 않는 공유 서버를 찾아내고 게스트 접근 제한에 따른 영향을 분석하는 데 도움이 됩니다."
+  },
+  {
+    "Scope": "Machine",
+    "ID": "1839",
+    "Name": "Lanman Workstation: Audit server does not support encryption",
+    "Description": "SMB 클라이언트가 접속한 서버가 SMB 암호화를 지원하지 않을 때 감사 기록을 남기는지 확인합니다. 전송 내용의 기밀성을 보호할 수 없는 서버 의존성을 식별하는 자료이며, 감사가 암호화 요구를 대신하지는 않습니다."
+  },
+  {
+    "Scope": "Machine",
+    "ID": "1840",
+    "Name": "Lanman Workstation: Audit server does not support signing",
+    "Description": "SMB 클라이언트가 메시지 서명을 지원하지 않는 서버에 연결하는 상황을 감사하도록 설정했는지 확인합니다. 통신 무결성 보호가 부족한 공유 서버를 식별하고 서명 필수 적용에 필요한 조치를 검토하는 데 쓰입니다."
+  },
+  {
+    "Scope": "Machine",
+    "ID": "1602",
+    "Name": "Lanman Workstation: Enable insecure guest logons",
+    "Description": "SMB 클라이언트가 원격 서버의 안전하지 않은 게스트 공유에 접속할 수 있는지 확인합니다. 게스트 연결은 사용자별 인증과 서명·암호화 보호에 제약이 있으므로, 허용 여부는 서버 사칭 및 통신 노출 위험에 영향을 줍니다."
+  },
+  {
+    "Scope": "Machine",
+    "ID": "1841",
+    "Name": "Lanman Workstation: Enable remote mailslots",
+    "Description": "클라이언트 측에서 원격 메일슬롯을 이용한 레거시 네트워크 메시지 전달을 허용하는지 확인합니다. 업무에 필요하지 않은 구형 메시징 경로를 제거하면 외부 장치와의 불필요한 통신 및 사칭된 메시지 처리 노출을 줄일 수 있습니다."
+  },
+  {
+    "Scope": "Machine",
+    "ID": "1842",
+    "Name": "Lanman Workstation: Mandate the minimum version of SMB",
+    "Description": "이 컴퓨터가 원격 공유 서버와 연결할 때 허용하는 SMB 프로토콜의 최저 버전을 확인합니다. 오래된 서버에 맞춰 보호 기능이 부족한 버전으로 연결되는 것을 제한하는 기준이며, 서버 측 최소 버전 설정과는 별도로 적용됩니다."
+  },
+  {
+    "Scope": "Machine",
+    "ID": "1843",
+    "Name": "Lanman Workstation: Require Encryption",
+    "Description": "SMB 클라이언트가 원격 파일 공유 연결에 암호화를 반드시 요구하도록 구성했는지 확인합니다. 네트워크에서 파일 내용과 통신 데이터가 노출되는 것을 줄이는 기밀성 보호 설정으로, 변조 방지용 서명만 사용하는 경우와 구분됩니다."
+  },
+  {
+    "Scope": "Machine",
+    "ID": "1604",
+    "Name": "WLAN Service: WLAN Settings: Allow Windows to automatically connect to suggested open hotspots, to networks shared by contacts, and to hotspots offering paid services",
+    "Description": "추천된 개방형 핫스폿이나 연락처가 공유한 네트워크 등으로 Windows가 자동 연결할 수 있는지 확인합니다. 사용자가 명시적으로 선택하지 않은 무선망에 접속하는 경로를 제한하면 악성 핫스폿이나 비신뢰 네트워크에 의도치 않게 노출되는 위험을 줄일 수 있습니다."
+  },
+  {
+    "Scope": "Machine",
+    "ID": "2108",
+    "Name": "Turn on PowerShell Module Logging",
+    "Description": "PowerShell Core에서 지정된 모듈의 파이프라인 실행 정보를 로그에 기록하도록 설정했는지 확인합니다. 명령과 매개변수 등의 실행 흔적은 관리 도구를 악용한 행위를 조사하는 데 도움이 되며, 기록 대상 모듈 지정과 함께 해석해야 합니다."
+  },
+  {
+    "Scope": "Machine",
+    "ID": "2109",
+    "Name": "Turn on PowerShell Module Logging (PowerShell Policy)",
+    "Description": "PowerShell Core의 모듈 로깅이 Windows PowerShell 정책 설정을 사용하도록 구성했는지 확인합니다. 두 실행 환경의 감사 기준을 일치시키는 데 관련되지만, 정책 공유 설정만으로 원본 정책의 로깅 활성화와 대상 범위까지 보장되지는 않습니다."
+  },
+  {
+    "Scope": "Machine",
+    "ID": "2110",
+    "Name": "Turn on PowerShell Module Logging - Module Names",
+    "Description": "PowerShell Core 모듈 로깅의 대상 목록이 어떤 모듈을 포함하는지 확인합니다. 전체 모듈을 뜻하는 와일드카드 범위는 일부 모듈만 기록해 생기는 감사 공백을 줄이지만, 모듈 로깅 기능도 별도로 활성화되어 있어야 합니다."
+  },
+  {
+    "Scope": "Machine",
+    "ID": "2111",
+    "Name": "Turn on PowerShell Script Block Logging",
+    "Description": "PowerShell Core가 처리하는 스크립트 블록의 내용을 로그에 남기도록 설정했는지 확인합니다. 메모리에서 실행되거나 동적으로 만들어진 코드의 분석에 도움이 되며, 스크립트에 포함된 민감한 값이 기록될 수 있어 로그 접근 권한도 중요합니다."
+  },
+  {
+    "Scope": "Machine",
+    "ID": "2112",
+    "Name": "Turn on PowerShell Script Block Logging (Invocation)",
+    "Description": "PowerShell Core 스크립트 블록의 호출 시작과 종료 이벤트를 추가로 기록하도록 설정했는지 확인합니다. 코드 내용 기록을 실행 시점과 연결해 조사할 수 있지만, 반복 호출이 많은 환경에서는 로그 발생량이 크게 늘 수 있습니다."
+  },
+  {
+    "Scope": "Machine",
+    "ID": "2113",
+    "Name": "Turn on PowerShell Script Block Logging (PowerShell Policy)",
+    "Description": "PowerShell Core의 스크립트 블록 로깅에 Windows PowerShell 정책을 사용하도록 설정했는지 확인합니다. 실행 환경에 따라 코드 기록 기준이 달라지는 것을 줄이는 데 관련되며, 실제 기록 여부는 참조하는 정책의 활성화 상태도 확인해야 합니다."
+  },
+  {
+    "Scope": "Machine",
+    "ID": "2116",
+    "Name": "Turn on PowerShell Transcription",
+    "Description": "PowerShell Core 세션의 입력 명령과 화면에 표시되는 출력을 텍스트 대화 기록으로 남기도록 설정했는지 확인합니다. 관리 작업의 경위를 재구성하는 데 도움이 되지만, 출력에 비밀정보가 포함될 수 있으므로 기록 파일의 보관 위치와 접근 통제가 중요합니다."
+  },
+  {
+    "Scope": "Machine",
+    "ID": "2114",
+    "Name": "Turn on PowerShell Transcription (Invocation)",
+    "Description": "PowerShell Core 대화 기록에 각 명령의 호출 시각을 포함하는 헤더를 추가하도록 설정했는지 확인합니다. 명령 실행 순서와 시간을 다른 보안 로그에 연결하는 데 도움이 되며, 대화 기록 기능 자체의 활성화와는 구분됩니다."
+  },
+  {
+    "Scope": "Machine",
+    "ID": "2115",
+    "Name": "Turn on PowerShell Transcription (PowerShell Policy)",
+    "Description": "PowerShell Core의 대화 기록 기능이 Windows PowerShell 정책 설정을 사용하도록 구성했는지 확인합니다. 두 환경의 세션 기록 기준을 통일하는 데 관련되지만, 이 선택만으로 기록 파일이 생성되거나 안전하게 보관된다고 볼 수는 없습니다."
+  },
+  {
+    "Scope": "Machine",
+    "ID": "1844",
+    "Name": "Allow Print Spooler to accept client connections",
+    "Description": "인쇄 스풀러가 원격 클라이언트의 인쇄 서비스 연결을 받아들일 수 있는지 확인합니다. 프린터 공유가 필요 없는 컴퓨터에서 원격 수신 경로를 제한하면 스풀러의 네트워크 공격 노출을 줄일 수 있으며, 로컬 인쇄 기능이나 서비스 중지와는 별개입니다."
+  },
+  {
+    "Scope": "Machine",
+    "ID": "1772",
+    "Name": "Configure Redirection Guard",
+    "Description": "인쇄 스풀러가 파일 리디렉션을 악용하는 접근을 제한하도록 Redirection Guard를 구성했는지 확인합니다. 조작된 경로를 따라 높은 권한의 스풀러가 의도하지 않은 파일을 처리하는 위험을 줄이기 위한 보호 기능입니다."
+  },
+  {
+    "Scope": "Machine",
+    "ID": "1845",
+    "Name": "Configure RPC connection settings (RpcUseNamedPipeProtocol)",
+    "Description": "다른 컴퓨터의 인쇄 서비스에 RPC로 연결할 때 TCP와 명명된 파이프 중 어떤 전송 방식을 사용하는지 확인합니다. 선택한 전송 방식은 방화벽에서 통제할 통신 경로와 인증 동작에 영향을 주므로 인쇄 연결의 보호 수준을 해석하는 데 중요합니다."
+  },
+  {
+    "Scope": "Machine",
+    "ID": "1846",
+    "Name": "Configure RPC connection settings (RpcAuthentication)",
+    "Description": "원격 인쇄 스풀러로 나가는 RPC 연결에서 인증을 기본 동작에 맡길지 강제하거나 해제할지 확인합니다. 인증은 연결 주체를 확인하는 데 중요하며, 기본값의 실제 동작은 전송 방식과 도메인 가입 상태에 따라 달라질 수 있습니다."
+  },
+  {
+    "Scope": "Machine",
+    "ID": "1847",
+    "Name": "Configure RPC listener settings (RpcProtocols)",
+    "Description": "인쇄 스풀러의 RPC 수신기가 로컬 RPC, TCP, 명명된 파이프 중 어떤 통신 경로를 허용하는지 확인합니다. 원격에서 접근할 수 있는 인쇄 서비스의 인터페이스 범위를 결정하므로 필요하지 않은 수신 경로의 노출을 관리하는 데 관련됩니다."
+  },
+  {
+    "Scope": "Machine",
+    "ID": "1848",
+    "Name": "Configure RPC listener settings (ForceKerberosForRpc)",
+    "Description": "인쇄 스풀러가 수신하는 RPC 연결에 Kerberos 인증만 요구하도록 설정했는지 확인합니다. Kerberos 강제 여부는 NTLM 허용 범위와 클라이언트 호환성에 영향을 주며, 강제하지 않는다는 사실만으로 RPC 인증 전체가 꺼진 것은 아닙니다."
+  }
+]

@@ -12,6 +12,10 @@ The project started with the creation of a simple hardening checklist for Window
 
 ## HardeningKitty
 
+_HardeningKitty_ originates from the [Windows Hardening Project by Michael Schneider](https://github.com/0x6d69636b/windows_hardening). This fork retains the original **0.9.5** upstream Git module and adds a local, read-only **comprehensive security audit with explained HTML reporting**.
+
+원본 `HardeningKitty.psm1`과 공식 점검 목록은 유지하고, `HardeningKitty.SecurityAudit.psm1`, 내부 수집 지원 파일 `HardeningKitty.BaselineAudit.ps1`, 중요도·조치 분류 파일 `HardeningKitty.PriorityAudit.ps1`, 보고서 표시 파일 `HardeningKitty.Report.ps1`, 항목 설명 `report-data/`를 추가했습니다. 기본 머신 **418개**와 현재 사용자 **56개** 기준 항목에 화면 보호기·비밀번호·계정 날짜 점검을 합칩니다. 이 Git 체크아웃의 원본 `HardeningKitty.psm1`은 **서명되지 않은 0.9.5 개발 코드**이며 추가 코드·설명 카탈로그·수정된 manifest도 서명된 릴리스가 아닙니다. `lists/`의 서명된 목록 manifest는 목록 무결성용이며 엔진이나 확장 코드의 서명을 뜻하지 않습니다. 공개 통합 명령은 `Invoke-HardeningKittySecurityAudit`이며 `HardeningKitty.psd1`을 가져와 사용합니다.
+
 _HardeningKitty_ supports hardening of a Windows system. The configuration of the system is retrieved and assessed using a finding list. In addition, the system can be hardened according to predefined values. _HardeningKitty_ reads settings from the registry and uses other modules to read configurations outside the registry.
 
 The script was developed for English systems. It is possible that in other languages the analysis is incorrect. Please create an issue if this occurs.
@@ -22,11 +26,45 @@ The development of _HardeningKitty_ happens in this repository. In the [reposito
 
 ### How To Run
 
+#### HTML 보고서 빠른 시작
+
+Windows PowerShell **5.1 이상**에서 실행합니다. 64비트 Windows에서는 64비트 PowerShell을 사용하세요. 이 디렉터리를 작업 경로로 열고, 보안 정책 조회를 위해 **점검할 사용자와 동일한 계정으로 관리자 권한 실행**합니다. 다른 관리자 계정으로 실행하면 화면 보호기 점검 대상(HKCU)도 그 계정으로 바뀝니다.
+
+```powershell
+Import-Module .\HardeningKitty.psd1 -Force
+$ReportPath = Join-Path $PWD ("system-security-{0}.html" -f (Get-Date -Format 'yyyyMMdd-HHmmss-fff'))
+$Results = Invoke-HardeningKittySecurityAudit -ReportFile $ReportPath
+Start-Process -FilePath $ReportPath
+```
+
+보고서가 브라우저에서 열립니다. 시스템 설정이나 비밀번호는 변경하지 않으며, 기존 보고서는 덮어쓰지 않습니다. 브라우저 실행이 필요 없으면 마지막 줄을 생략하세요.
+
+#### 명령별 용도
+
+| 명령 | 용도 | 보고서 |
+| :--- | :--- | :--- |
+| `Invoke-HardeningKittySecurityAudit` | 머신·현재 사용자 기준 목록 + 화면 보호기·비밀번호·계정 보완 점검 통합 | 설명 포함 HTML/CSV: `-ReportFile`의 `.html` / `.htm` / `.csv`로 선택 |
+| `Invoke-HardeningKitty` | 공식/사용자 정의 목록 기반 전체 보안 점검 및 하드닝 | `-Report`로 CSV 저장, `-Log`로 로그 저장 |
+
+**계정 보안에 한정하지 않습니다.** 통합 명령은 원본 엔진을 `Audit` 모드로 실행하여 머신·현재 사용자 기준 목록 전체를 먼저 점검합니다. 실행 단위 수집 오류로 비교를 신뢰할 수 없었던 항목은 ID별로 독립 재점검한 뒤, 보완 점검과 함께 설명이 포함된 보고서를 생성합니다. 기존 `Invoke-HardeningKitty`에 `.html` 파일명만 지정하는 방식이 아니라 **통합 명령**을 사용하세요.
+
+기존 머신 설정 점검은 다음과 같이 실행합니다. 사용자 설정 목록은 점검할 일반 사용자 계정으로 실행하는 것이 적절합니다.
+
+```powershell
+Invoke-HardeningKitty -Mode Audit -Log -Report
+```
+
+설정 변경을 원하지 않으면 `HailMary` / `GPO` 모드를 실행하지 마세요. 통합 명령은 변경 모드를 노출하지 않습니다. 상세 옵션은 [통합 보안 점검 사용법](#comprehensive-security-audit)을 참고하세요.
+
+#### Native engine example
+
+The sample output below is historical; this checkout uses native 0.9.5. Import `HardeningKitty.psd1` for both public commands; importing only `HardeningKitty.psm1` exposes only the native engine.
+
 Run the script with administrative privileges to access machine settings. For the user settings it is better to execute them with a normal user account. Ideally, the user account is used for daily work.
 
 Download _HardeningKitty_ and copy it to the target system (script and lists). Then HardeningKitty can be imported and executed:
 
-```powershell
+```text
 PS C:\tmp> Import-Module .\HardeningKitty.psm1
 PS C:\tmp> Invoke-HardeningKitty -EmojiSupport
 
@@ -74,14 +112,14 @@ PS C:\tmp> Invoke-HardeningKitty -EmojiSupport
 
 ### How To Install
 
-First create the directory *HardeningKitty* and for every version a sub directory like *0.9.3* in a path listed in the *PSModulePath* environment variable.
+First create the directory *HardeningKitty* and for every version a sub directory like *0.9.5* in a path listed in the *PSModulePath* environment variable.
 
-Copy the module *HardeningKitty.psm1*, *HardeningKitty.psd1*, and the *lists* directory to this new directory.
+Copy *HardeningKitty.psm1*, *HardeningKitty.SecurityAudit.psm1*, *HardeningKitty.BaselineAudit.ps1*, *HardeningKitty.PriorityAudit.ps1*, *HardeningKitty.Report.ps1*, *HardeningKitty.psd1*, and both the *lists* and *report-data* directories to this new directory.
 
 ```powershell
-PS C:\tmp> $Version = "0.9.3"
+PS C:\tmp> $Version = "0.9.5"
 PS C:\tmp> New-Item -Path $Env:ProgramFiles\WindowsPowerShell\Modules\HardeningKitty\$Version -ItemType Directory
-PS C:\tmp> Copy-Item -Path .\HardeningKitty.psd1,.\HardeningKitty.psm1,.\lists\ -Destination $Env:ProgramFiles\WindowsPowerShell\Modules\HardeningKitty\$Version\ -Recurse
+PS C:\tmp> Copy-Item -Path .\HardeningKitty.psd1,.\HardeningKitty.psm1,.\HardeningKitty.SecurityAudit.psm1,.\HardeningKitty.BaselineAudit.ps1,.\HardeningKitty.PriorityAudit.ps1,.\HardeningKitty.Report.ps1,.\lists\,.\report-data\ -Destination $Env:ProgramFiles\WindowsPowerShell\Modules\HardeningKitty\$Version\ -Recurse
 ```
 
 For more information see Microsoft's article [Installing a PowerShell Module](https://docs.microsoft.com/en-us/powershell/scripting/developer/module/installing-a-powershell-module).
@@ -89,6 +127,8 @@ For more information see Microsoft's article [Installing a PowerShell Module](ht
 ### How to Automatically Download and Install the Latest Release
 
 You can use the script below to download and install the latest release of *HardeningKitty*.
+
+This downloads the upstream release, not this fork's comprehensive audit extensions. To retain the audit and item explanations, install this checkout's manifest, both modules, all three support scripts, `lists/` and `report-data/` together as described above. The signed stable release linked above is separate from this unsigned Git checkout; review and follow your organization's script-signing policy rather than treating the list signature as code-signing approval.
 
 ```powershell
 Function InstallHardeningKitty() {
@@ -112,7 +152,7 @@ InstallHardeningKitty
 
 #### Audit
 
-The default mode is _audit_. HardeningKitty performs an audit, saves the results to a CSV file and creates a log file. The files are automatically named and receive a timestamp. Using the parameters _ReportFile_ or _LogFile_, it is also possible to assign your own name and path.
+The default mode is _audit_. With `-Report` and `-Log`, HardeningKitty saves the results to a CSV file and creates a log file. The files are automatically named and receive a timestamp. Using the parameters _ReportFile_ or _LogFile_, it is also possible to assign your own name and path.
 
 The _Filter_ parameter can be used to filter the hardening list. For this purpose the PowerShell ScriptBlock syntax must be used, for example `{ $_.ID -eq 4505 }`. The following elements are useful for filtering: ID, Category, Name, Method, and Severity.
 
@@ -131,6 +171,191 @@ HardeningKitty uses the default list, and checks only tests with the severity Me
 ```powershell
 Invoke-HardeningKitty -Filter { $_.Severity -eq "Medium" }
 ```
+
+#### Comprehensive security audit
+
+`Invoke-HardeningKittySecurityAudit`은 머신과 현재 사용자 기준 목록 전체 및 보완 항목을 읽기 전용으로 점검합니다. 원본 모듈만 직접 가져오면 이 명령이 없으므로 **manifest인 `HardeningKitty.psd1`을 가져와야 합니다**.
+
+##### 점검 항목
+
+| 분류 / ID | 점검 내용 | 조회 방식 |
+| :--- | :--- | :--- |
+| 범위 / `CTX-01` | 실행 컴퓨터·사용자·SID | 실행 중인 Windows 계정 |
+| 머신 기준 / `Machine` | Windows 방화벽, Defender·ASR, 감사 정책, 사용자 권한, 네트워크·원격 접속, BitLocker, 서비스, 악용 방지 등 418개 | 원본 엔진의 머신 목록 Audit |
+| 사용자 기준 / `User` | 사용자 정책, PowerShell 로깅, Office 매크로·연결 기능, Windows 사용자 설정 등 56개 | 원본 엔진의 사용자 목록 Audit |
+| 실행 진단 / `ENGINE-Machine`, `ENGINE-User` | 예정·반환·누락·중복 수와 원본 진단 메시지 | 원본 CSV와 기준 목록 대조 |
+| 화면 보호기 / `SS-01`~`SS-04` | 활성화, 복귀 시 암호 보호, 대기시간, 설정된 `.scr` 파일 존재 여부 | 현재 사용자 HKCU 정책·사용자 설정 |
+| 비밀번호 정책 / `PP-01`~`PP-06` | 복잡도, 최소 길이, 최대·최소 사용 기간, 재사용 제한, 복호화 가능한 암호화 저장 | 로컬 SAM `NetUserModalsGet` 및 `secedit /export /mergedpolicy` |
+| 로컬 계정 / `LA-01`~`LA-05` | 최근 변경일, 경과일, 만료일, 무기한 사용, 비밀번호 필수 여부 | `Get-LocalUser`, SID로 매칭한 `Win32_UserAccount` |
+| 조회 오류 / `LA-00` | 계정 목록을 읽지 못한 이유 | 계정 조회 예외 |
+
+화면 보호기는 **정책 값이 사용자 설정보다 우선**하며, 명시적으로 꺼진 값도 그대로 반영합니다. 실제 화면 보호기를 실행하거나 화면 잠금 동작을 검증하지는 않습니다. 비밀번호 자체나 해시는 수집하지 않습니다.
+
+보고서에는 모든 기본 기준 항목의 **무엇을 점검하는지와 보안상 의미**를 한국어로 설명합니다. 원본 항목명은 유지하며, 실제 레지스트리 경로·명령·속성과 비교 연산자를 함께 표시합니다. 머신과 사용자에서 ID가 같아도 `Scope`와 `List`로 구분하므로 서로 덮어쓰지 않습니다.
+
+##### 실행 옵션
+
+| 매개변수 | 기본값 | 허용 범위 / 의미 |
+| :--- | :--- | :--- |
+| `-MachineFindingList` | `lists/finding_list_0x6d69636b_machine.csv` | 사용할 머신 기준 CSV |
+| `-UserFindingList` | `lists/finding_list_0x6d69636b_user.csv` | 사용할 현재 사용자 기준 CSV |
+| `-ScreenSaverTimeoutSeconds` | `900` | `1`~`86400`초. 화면 보호기 대기시간 상한 |
+| `-MaximumPasswordAgeDays` | `365` | `1`~`999`일. 최대 사용 기간 정책의 상한 및 계정 비밀번호 경과일 기준 |
+| `-MinimumPasswordLength` | `14` | `1`~`128`자. 최소 길이 정책의 하한 |
+| `-ReportFile` | 지정하지 않음 | `.html` / `.htm`: HTML, `.csv`: CSV. 다른 확장자는 거부 |
+
+기간·길이·대기시간 옵션은 **Supplemental 보완 항목에만 적용**하며 원본 기준 목록의 권장값을 바꾸지 않습니다. 보완 항목은 최소 사용 기간 **1일 이상**, 재사용 제한 **24개**, 복잡도 **활성화**, 복호화 가능한 암호화 저장 **비활성화**도 점검합니다. 이 기준들은 옵션으로 변경하지 않습니다. 최대 사용 기간 정책은 지정한 상한 **이하**여야 하고, 계정 경과일은 그 한계에 **도달하면** 개선 필요로 판정합니다.
+
+비밀번호 정책의 기본 기준은 포함된 CIS Windows 11 24H2 목록을 따릅니다. 이는 **평가 기준이며 Windows에 적용하는 설정이 아닙니다**. 정기 변경이 모든 환경에 필요한 것은 아니므로 조직 정책에 맞게 사용하세요.
+
+조직 기준이 90일·10분·14자일 때의 HTML 보고서 예시:
+
+```powershell
+Import-Module .\HardeningKitty.psd1 -Force
+$ReportPath = Join-Path $PWD ("system-security-{0}.html" -f (Get-Date -Format 'yyyyMMdd-HHmmss-fff'))
+$Results = Invoke-HardeningKittySecurityAudit `
+    -MaximumPasswordAgeDays 90 `
+    -ScreenSaverTimeoutSeconds 600 `
+    -MinimumPasswordLength 14 `
+    -ReportFile $ReportPath
+$Results | Format-Table Scope, ID, Name, TestResult, Importance, RemediationPriority -AutoSize
+```
+
+##### HTML·CSV 보고서
+
+HTML은 **종합 검토 → 중요도별 판정 현황 → 조치·재확인 작업 → 전체 결과 → 해석 기준** 순서입니다. 중요도와 우선순위를 따로 나열하는 대신 어떤 항목을 조치 검토할지, 어떤 근거를 더 확인할지 먼저 구분합니다. 안전 점수나 준수율을 임의로 만들지 않습니다. 컴퓨터·사용자·점검 시작 시각·범위와 여섯 가지 판정은 그대로 제공합니다.
+
+| 종합 검토 그룹 | 포함 결과 | 읽는 방법 |
+| :--- | :--- | :--- |
+| 조치 검토 | 실제 관측된 `Failed` 중 `P1`·`P2`·`P3` | 우선순위별로 보고, 같은 순위에서는 보안 중요도 높은 항목부터 확인 |
+| 근거·적용성 재확인 | `Unknown`·`Error` 및 `Review`로 분류된 `Failed` | 목록 기본값 대체·수집 오류·적용 대상·기준 방향 등을 확인. 곧바로 설정 변경하지 않음 |
+| 현재 추가 조치 없음 | `Passed`·`Info`·`NotApplicable` | 통과와 참고·대상 아님을 구분. 그룹 전체가 보안 통과라는 뜻이 아님 |
+
+세 그룹은 중복 없이 전체 결과를 포함합니다. **높은 중요도 미해결 수**는 `High` 중 `Failed`·`Unknown`·`Error`인 부분집합이며, 전체 High 개수나 확인된 취약점 수와 다릅니다. 중요도별 판정 표는 개선 필요, 미확인·오류, 통과, 참고·대상 아님을 함께 보여 줍니다. 재확인 작업은 사유별로 집계하여 기본값 대체와 실제 조회 실패를 구분합니다. 검토 그룹은 표시용이며 객체·CSV의 기존 분류를 바꾸지 않습니다.
+
+전체 결과는 **간결한 요약 행 + 펼쳐 보는 상세 근거** 구조입니다. 요약에는 범위·ID·이름·분류와 판정·중요도·우선순위가 표시됩니다. 동일 범위·ID가 반복되는 계정별 결과는 요약에도 대상을 표시하여 구분합니다. 바로가기는 항상 보이는 항목 요약으로 이동하며, 요약을 클릭하거나 키보드로 선택 후 Enter/Space를 눌러 펼칠 수 있습니다. ID·항목명은 브라우저 찾기 기능으로 찾을 수 있습니다. 상세에서는 전체 값·판정 기준·설명·대상·조치 근거와 원본 판정·기본값 대체·출처·사유·시각을 확인합니다. 긴 수집 진단은 추가로 펼쳐 읽으며 원문을 생략하지 않습니다.
+
+**외부 리소스나 JavaScript 없이 오프라인에서 열람**할 수 있습니다. 최신 Chromium/Edge의 인쇄/PDF 저장에서는 화면에서 접힌 항목과 중첩된 수집 근거까지 표시하며, 긴 진단은 여러 페이지로 이어집니다. 중복되는 빠른 작업 목록·탐색만 생략하고 재확인 사유별 요약·전체 결과·해석 기준은 유지합니다. 좁은 화면에서는 항목별 카드 형태로 읽을 수 있습니다. 개별 점검명과 원본 진단 메시지는 영문일 수 있습니다.
+
+보고서는 필요한 ID별 재점검까지 마친 뒤 반환되는 PowerShell 객체와 **동일한 결과 스냅샷**으로 생성됩니다. HTML·CSV 출력 자체가 추가 조회를 실행하지는 않습니다. 수집값과 사유 코드는 HTML 이스케이프 처리하므로 계정명이나 설정값에 포함된 태그가 실행되지 않습니다. 수집값에는 수집 구분을 함께 표시합니다. 누락값은 `—`, 실제 조회된 빈 문자열은 `(빈 값)`으로 표시하며, `0`과 `False`는 기본값 대체 여부와 무관하게 그대로 표시합니다. **객체와 CSV의 `Result` 원본 값은 표시용 문구로 바꾸지 않습니다.**
+
+위 실행 결과를 **재조회 없이** CSV로도 저장하려면:
+
+```powershell
+$CsvPath = [IO.Path]::ChangeExtension($ReportPath, '.csv')
+$Results | Export-Csv -LiteralPath $CsvPath -NoTypeInformation -Encoding UTF8 -NoClobber
+```
+
+CSV만 필요한 새 점검에서는 `-ReportFile .\system-security.csv`처럼 지정합니다. `-ReportFile`을 생략하면 통합 객체만 반환하고 최종 보고서는 저장하지 않습니다.
+
+공통 결과 필드는 `ID`, `Scope`, `List`, `Category`, `Name`, `Description`, `Target`, `Result`, `Recommended`, `TestResult`, `Source`, `Details`, `Severity`, `EngineTestResult`, `UsedDefault`, `ValueOrigin`, `ReasonCode`, `CheckedAt`, `Importance`, `ImportanceReason`, `RemediationPriority`, `PriorityReason`입니다. `EngineTestResult`는 해당 행을 수집한 원본 엔진의 판정, `UsedDefault`는 원본의 기본값 대체 플래그입니다. 보완 항목처럼 원본 엔진 결과가 아닌 항목에서는 두 필드가 비어 있습니다. `CheckedAt`은 각 행의 수집 시각이며 ID별 재점검 행에는 새 수집 시각이 기록됩니다. 모든 행이 한 시점의 상태를 뜻하지는 않으며 보고서 머리말은 `CTX-01`의 점검 시작 시각을 사용합니다.
+
+`ValueOrigin`은 판정과 별개인 **값의 수집 구분**이며 HTML의 값 옆에도 다음 문구로 표시합니다. ‘실제 조회’는 관측했다는 뜻이지 기준을 충족했다는 뜻은 아닙니다.
+
+| `ValueOrigin` | HTML 표시 | 의미 |
+| :--- | :--- | :--- |
+| `Observed` | 실제 조회 | 해당 수집에서 확인된 값. 실제 조회된 빈 문자열도 포함 |
+| `Default` | 목록 기본값 · 미조회 | 조회값 대신 기준 목록의 기본값을 사용. 현재 설정으로 단정 금지 |
+| `Unverified` | 조회 확인 안 됨 | 값이 있어도 수집 오류·불명확한 근거 등으로 조회를 확인하지 못함 |
+| `Unavailable` | 값 없음 | 판단에 사용할 수집값이 없음 |
+| `Reference` | 참고 정보 | 범위·실행 진단 등 설정값이 아닌 참고 자료 |
+
+`ReasonCode`는 근거를 구분하는 짧은 코드입니다. 예를 들어 `DefaultSubstitution`은 목록 기본값 대체, `CollectionError`는 수집 오류로 비교를 신뢰할 수 없는 상태, `UnverifiedEmptyExport`는 성공 여부를 확인할 수 없는 빈 권한 내보내기를 뜻합니다. 누락·중복·유효하지 않은 근거도 구분하며, 보완·범위 항목에서는 별도 코드가 없으면 빈 문자열입니다. 자세한 이유는 `Details`와 함께 확인하세요. HTML의 상세 근거 마지막에도 사유 코드를 표시합니다.
+
+HTML과 CSV는 UTF-8로 저장하며 기존 파일을 덮어쓰지 않습니다. 기존에 저장한 보고서가 자동으로 다시 작성되는 것은 아닙니다. 새 동작의 결과는 새 파일명으로 점검하여 저장하세요.
+
+##### 보안 중요도와 조치 우선순위
+
+**보안 중요도는 통제의 의미이며, 조치 우선순위는 빠르게 변경할 수 있는지와 운영 영향을 구분한 안내입니다.** 높은 중요도의 항목이 3순위 또는 재확인일 수 있습니다. 중요도와 우선순위가 원본 판정·실측값을 바꾸거나 설정 변경을 실행하지는 않습니다.
+
+| `Importance` | 표시 | 정의 |
+| :--- | :--- | :--- |
+| `High` | 높음 | 접근·인증·자격증명·데이터 보호 등 직접적인 보안 통제 |
+| `Medium` | 보통 | 방어 계층·탐지·감사·정책 운영을 보완하는 통제 |
+| `Low` | 낮음 | 편의 기능·정보 노출 축소 등 보조 통제 |
+| `Unrated` | 미분류 | 지원되는 중요도 근거가 없어 추정하지 않음. 낮음과 다름 |
+| `Reference` | 참고 | 점검 범위·실행 진단·날짜 정보 등 보안 등급을 부여하지 않는 기록 |
+
+머신·사용자 목록은 원본 `Severity`의 정확한 `High` / `Medium` / `Low`를 표준화해 표시합니다. 이는 **목록 작성자의 분류**이며 현재 호스트의 실제 침해 가능성을 재계산한 점수가 아닙니다. 원본 값은 `Severity`에 그대로 보존합니다. 보완 항목은 화면 잠금 인증·암호 강도·복구 가능한 암호 저장·암호 필수 플래그 등을 높음, 기간·기록·예외 및 운영 보완 통제를 보통으로 별도 정의합니다. 행별 근거는 `ImportanceReason`에 기록합니다.
+
+| `RemediationPriority` | 표시 | 정의 및 예 |
+| :--- | :--- | :--- |
+| `P1` | 1순위 · 낮은 영향 후보 | 로그 용량, 일부 감사·차단 기록, Windows 팁 설정. 공간·운영 조건 확인은 필요하며 무위험을 뜻하지 않음 |
+| `P2` | 2순위 · 영향 확인 후 | 로그량, 로그인·권한 요청, 암호 변경, 장치 공유·Xbox·WebClient 사용 여부 확인 |
+| `P3` | 3순위 · 계획 변경 | SMB·인증·인쇄·암호화·PowerShell 정책 등. 호환성 테스트와 복구 준비 필요. 낮은 보안 중요도를 뜻하지 않음 |
+| `Review` | 재확인 | 수집 실패·기본값 대체·적용 대상·유효 설정·변경 영향이 불명확하여 일괄 변경 제외 |
+| `None` | 현재 조치 없음 | 통과·참고·대상 아님. 참고나 대상 아님을 보안 통과로 간주하지 않음 |
+
+`P1`~`P3`는 **실제 관측된 Failed 행에만** 부여합니다. `Unknown`·`Error`는 중요도와 관계없이 재확인입니다. `NOTSET` 완화 기능은 Windows 기본값 사용으로 실제 보호 상태를 확인해야 하며, Defender 상태는 활성 백신과 적용 대상 확인 전까지 일괄 변경에서 제외합니다. 서비스가 현재 중지되어 있다고 미사용으로 단정하지 않습니다.
+
+**AutoPlay 기준 방향 주의:** 기본 사용자 목록의 `4505`는 `DisableAutoplay = 0`을 요구합니다. 이를 “자동재생 해제”라고 안내하면 반대 방향으로 변경할 수 있으므로 Failed여도 `Review`로 분류합니다. 원본 목록·권장값·판정은 보존하며, 기준 의도와 유효 설정부터 확인해야 합니다.
+
+기본 목록의 분류는 `Scope`, `ID`, `List`, `Name`, `Source`, `Recommended`가 참조 정의와 정확히 일치할 때만 연결합니다. 사용자 정의·이름/조회 대상/기준이 달라진 항목 또는 명시된 영향 분류가 없는 항목은 `Review`로 남기며 ID나 원본 중요도만으로 저위험 변경을 추정하지 않습니다. 구체적인 영향과 확인 사항은 `PriorityReason`에 기록합니다.
+
+HTML의 중요도·전체 우선순위 집계는 **모든 결과 행** 기준입니다. 빠른 조치 작업 목록은 **Failed만** 우선순위별로 묶지만, 재확인 작업 요약과 전체 결과에는 **Unknown·Error도 빠짐없이 포함**합니다. 따라서 재확인 전체 집계와 Failed만 표시한 검토 목록의 수는 다릅니다. 중복된 서비스 점검이나 계정별 행 때문에 행 수는 독립 변경 작업 수와 같지 않습니다. 우선순위와 판정·수집 구분이 서로 모순되는 입력은 임의로 보정하거나 저위험 조치로 표시하지 않고 보고서 생성 오류로 알립니다.
+
+##### 항목 설명과 사용자 정의 기준
+
+`report-data/`의 JSON 설명 카탈로그는 기본 머신·사용자 474개 항목에 대한 로컬 작성 설명입니다. 원본 목록의 서명이나 공급자 공식 설명으로 간주하지 않습니다. 설명은 `Scope`·`ID`·정확한 `Name`을 확인하여 연결합니다.
+
+다른 기준 목록은 `-MachineFindingList` / `-UserFindingList`로 지정합니다. 사용자 정의 CSV에 `Description` 열을 추가하면 해당 내용을 우선 사용합니다. 카탈로그와 일치하지 않고 설명 열도 없는 항목은 **조회 정보 기반의 일반 설명임을 명시**하며 보안 목적을 임의로 만들어 내지 않습니다. 원본 목록을 수정하지 말고 별도 사용자 정의 CSV를 만드세요.
+
+##### 판정 해석
+
+| `TestResult` | 보고서 표시 | 의미 |
+| :--- | :--- | :--- |
+| `Passed` | 통과 | 해당 점검값이 실행 기준을 충족 |
+| `Failed` | 개선 필요 | 해당 점검값이 실행 기준을 미충족 |
+| `Unknown` | 확인 필요 | 값 누락·형식 불명·권위 있는 자료 부족으로 판정 불가 |
+| `Error` | 조회 오류 | 점검 자료 조회 중 오류 발생 |
+| `Info` | 참고 | 범위·날짜 등 참고 자료이며 적합 판정이 아님 |
+| `NotApplicable` | 대상 아님 | 비활성 계정 등 평가 제외 항목. 조회된 정보는 유지 |
+
+`Unknown` / `Error`는 통과로 간주하지 않습니다. `Info` / `NotApplicable`도 통과 수에 합산하지 않으며, 원본 HardeningKitty의 점수 공식을 이 보고서에 적용하지 않습니다.
+
+원본 엔진이 기본값으로 대체한 항목은 원본 판정과 관계없이 통합 보고서에서 `Unknown`으로 표시합니다. 원본 CSV에 빠진 예정 항목이나 중복 결과는 `Error`로 남깁니다. 숫자가 필요한데 비어 있거나 형식이 잘못된 결과, 수동 확인 표시값, 실제 규칙과 구분되지 않는 ASR 기본값도 통과로 간주하지 않습니다. 따라서 원본 CSV의 통과 수와 통합 보고서의 통과 수가 다를 수 있습니다.
+
+**최초 머신·사용자 전체 목록 점검은 유지합니다.** 원본 엔진이 실행 단위 수집 오류를 보고하여 유효한 비교값의 신뢰 여부를 개별 ID에 연결할 수 없으면, 해당 항목을 **같은 원본 엔진의 `Audit` 모드로 ID별 독립 재조회**합니다. 다른 점검의 오류만으로 정상 값을 계속 `Unknown`으로 남기지 않고, 오류 없이 단일 항목의 조회값과 비교를 확인한 경우에만 `Passed` / `Failed`로 판정합니다. 재조회에서도 수집 오류·기본값 대체·ASR 모호성·결과 누락·중복이 있으면 미해결 상태로 남깁니다. 원본 CSV의 `Failed`·`High` 행과 정확히 일치하는 판정 메시지는 기준 미충족 결과이지 수집 오류가 아닙니다.
+
+**빈 결과도 출처에 따라 구분합니다.** 정상 조회가 확인된 `Get-MpPreference`의 빈 Defender 제외 목록은 원본 기준에 따라 통과할 수 있으며 `(빈 값)`·‘실제 조회’로 표시합니다. 반면 원본 `accesschk` 수집기는 `secedit`의 네이티브 종료 코드를 확인하지 않아 미리 만든 빈 파일과 성공한 빈 권한 내보내기를 구분할 수 없습니다. 내보내기 성공 근거가 없는 빈 `accesschk` 값은 오류가 없는 단일 항목 실행에서도 `Unknown` / `Unverified`, 사유 코드 `UnverifiedEmptyExport`로 남깁니다. 이를 ‘권한 없음’ 또는 통과로 해석하지 마세요.
+
+재점검도 **동일한 전체 기준 목록을 수정하지 않고 ID로 선택**하여 수행하며 보안 정책을 변경하지 않습니다. 독립 호출 때문에 실행 시간이 더 걸릴 수 있습니다. `EngineTestResult`, `UsedDefault`, `ValueOrigin`, `ReasonCode`, `Details`와 `ENGINE-Machine` / `ENGINE-User` 진단 내용을 함께 확인하세요.
+
+##### 범위와 제한 사항
+
+- **기준 목록 전체이지 모든 위협은 아님:** OS 버전·제품 설치 여부·업무 환경에 따른 적용 가능성을 자동 확정하지 않습니다. 없는 제품의 기본값 추정이나 미조회 결과를 자동으로 적용 제외하지 않습니다.
+- **원본 엔진 제약 유지:** 원본을 `-Mode Audit -Source GPO`로 순차 실행합니다. 여기서 `Source GPO`는 조회 소스이며 GPO를 만드는 모드가 아닙니다. Intune 전용 감사나 모든 사용자 프로필 점검은 지원하지 않습니다. 언어 의존 수집기와 숨겨진 기본값 처리 한계는 원본에 남아 있습니다.
+- **조회 범위와 동작 검증 구분:** 방화벽 규칙은 `Enabled`, 서비스는 `StartType` 등을 조회합니다. 실제 포트 차단·서비스 실행 여부·공격 방어 성공까지 검증한 것으로 해석하지 마세요.
+- **현재 실행 사용자만 점검:** 화면 보호기의 HKCU는 대화형 데스크톱 사용자와 다를 수 있습니다. `CTX-01`의 사용자와 SID를 확인하세요. 다른 사용자 프로필의 레지스트리를 로드하지 않습니다.
+- **정책과 실제 암호는 별개:** 복잡도 정책이 켜져 있어도 기존 비밀번호가 그 기준을 충족하는지 증명하지 않습니다. Windows Hello PIN은 점검 대상이 아닙니다.
+- **미구성 정책:** 일부 Windows는 `secedit` 내보내기에 복잡도·복호화 가능 암호화 저장 값을 포함하지 않습니다. 이를 활성화/비활성화로 추정하지 않고 `Unknown`으로 표시합니다. SAM의 길이·기간·이력 조회는 독립적으로 수행합니다.
+- **온라인·도메인 계정:** Microsoft 계정·Entra ID·도메인 계정의 실제 변경일과 정책은 인증 공급자에서 확인해야 합니다. 로컬 SAM 기록이 있어도 권위 있는 온라인 기록으로 간주하지 않습니다.
+- **누락된 날짜:** 최근 변경일이 없다고 빈 비밀번호나 변경 이력 없음으로 단정하지 않습니다. 만료일이 없다고 무기한 사용 플래그를 추정하지도 않습니다.
+- **시간 기준:** 날짜는 기록된 시간대 오프셋을 유지합니다. 각 행의 `CheckedAt`은 해당 수집 시각이며, 독립 재점검은 최초 전체 목록 점검과 다른 시각일 수 있습니다. 경과일은 호스트 시계 기준이며 인증된 사건 발생 시각이 아닙니다.
+- **파일 및 보안:** 임시 정책 내보내기는 접근 제한 디렉터리에 생성하고 성공·실패 시 정리합니다. 보고서에는 사용자 식별자와 보안 설정이 있으므로 접근을 제한해 보관하세요.
+
+##### 문제 해결
+
+| 증상 | 확인할 사항 |
+| :--- | :--- |
+| `Invoke-HardeningKittySecurityAudit`을 찾지 못함 | 설치 항목의 파일·디렉터리를 모두 함께 두고 새 PowerShell에서 manifest 가져오기 |
+| 설명 카탈로그를 읽지 못함 | `report-data/`의 JSON 파일들이 모듈과 함께 배포되었는지 확인 |
+| `Get-LocalUser` 사용 불가 | 64비트 Windows에서 64비트 PowerShell인지 확인 |
+| `secedit` 접근 거부 / 내보내기 실패 | 점검할 사용자와 동일한 계정으로 관리자 권한 실행 |
+| 복잡도 또는 화면 보호기가 `Unknown` | `Source`·`Details`를 확인하고 로컬 보안 정책/관리 정책 또는 해당 사용자의 설정에서 확인. 통과나 비활성화로 단정 금지 |
+| 보고서 파일이 이미 존재함 | 새 파일명 또는 타임스탬프 파일명 사용. 기존 결과는 보존 |
+| 보고서 저장 경로 오류 | 상위 폴더 존재 여부와 쓰기 권한 확인. 상위 폴더는 자동 생성하지 않음 |
+
+##### 회귀 테스트
+
+Windows PowerShell 5.1 / Pester 3.4.0 환경에서 다음과 같이 실행합니다.
+
+```powershell
+$TestResults = Invoke-Pester .\tests -PassThru
+if ($TestResults.FailedCount -gt 0) { throw 'Security audit regression tests failed.' }
+```
+
+테스트는 전체 기준 목록과 설명의 대응, 결과 누락·중복·기본값 대체 처리, 읽기 전용 엔진 호출, 정책·날짜 경계값, 클라우드·비활성 계정 구분, 임시 파일 정리, HTML 설명·집계·인젝션 방지·UTF-8 출력, CSV 출력과 기존 보고서 보호를 검증합니다.
 
 #### Config
 

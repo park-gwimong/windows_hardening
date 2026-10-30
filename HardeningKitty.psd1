@@ -6,8 +6,8 @@
 
 @{
 
-    # Script module or binary module file associated with this manifest.
-    RootModule = 'HardeningKitty.psm1'
+    # Manifest-only package; retain the upstream engine as a nested module.
+    RootModule = ''
 
     # Version number of this module.
     ModuleVersion = '0.9.5'
@@ -63,17 +63,17 @@
     # Format files (.ps1xml) to be loaded when importing this module
     # FormatsToProcess = @()
 
-    # Modules to import as nested modules of the module specified in RootModule/ModuleToProcess
-    # NestedModules = @()
+    # Modules whose public commands are exposed by this manifest.
+    NestedModules = @('HardeningKitty.psm1', 'HardeningKitty.SecurityAudit.psm1')
 
     # Functions to export from this module, for best performance, do not use wildcards and do not delete the entry, use an empty array if there are no functions to export.
-    FunctionsToExport = 'Invoke-HardeningKitty'
+    FunctionsToExport = @('Invoke-HardeningKitty', 'Invoke-HardeningKittySecurityAudit')
 
     # Cmdlets to export from this module, for best performance, do not use wildcards and do not delete the entry, use an empty array if there are no cmdlets to export.
     CmdletsToExport = @()
 
     # Variables to export from this module
-    VariablesToExport = '*'
+    VariablesToExport = @()
 
     # Aliases to export from this module, for best performance, do not use wildcards and do not delete the entry, use an empty array if there are no aliases to export.
     AliasesToExport = @()

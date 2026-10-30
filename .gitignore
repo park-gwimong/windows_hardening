@@ -1,0 +1,18 @@
+# GJC runtime sessions, not project configuration.
+/.gjc/_session-*/
+
+# Generated comprehensive audit reports in the repository root.
+/system-security*.html
+/system-security*.htm
+/system-security*.csv
+/security-report*.html
+/security-report*.htm
+/security-report*.csv
+
+# Generated native audit reports and logs in the repository root.
+/hardeningkitty_report_*.csv
+/hardeningkitty_log_*.log
+/hardeningkitty_*audit*.html
+/hardeningkitty_*audit*.htm
+/hardeningkitty_*audit*.csv
+/hardeningkitty_backup_*.csv
